@@ -1,3 +1,5 @@
+package main;
+
 import java.util.*;
 
 public class Question {
@@ -31,7 +33,7 @@ public class Question {
 
     @Override
     public String toString() {
-        return "Question{" +
+        return "main.Question{" +
                 "questionText='" + questionText + '\'' +
                 ", answers=" + answers +
                 ", correctID=" + correctID +
