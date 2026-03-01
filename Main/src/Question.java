@@ -4,6 +4,7 @@ public class Question {
     private String questionText;
     private List<String> answers;
     private int correctID;
+    private int complexity;
 
     public String getQuestionText() {
         return questionText;
@@ -17,10 +18,15 @@ public class Question {
         return correctID;
     }
 
-    public Question(String questionText, List<String> answers, int correctID) {
+    public int getComplexity() {
+        return complexity;
+    }
+
+    public Question(String questionText, List<String> answers, int correctID, int complexity) {
         this.questionText = questionText;
         this.answers = answers;
         this.correctID = correctID;
+        this.complexity = complexity;
     }
 
     @Override
@@ -29,6 +35,7 @@ public class Question {
                 "questionText='" + questionText + '\'' +
                 ", answers=" + answers +
                 ", correctID=" + correctID +
+                ", complexity=" + complexity +
                 '}';
     }
 }
