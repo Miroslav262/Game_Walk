@@ -34,5 +34,20 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../Libs/javafx/lib/javafx.controls.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Libs/javafx/lib/javafx.fxml.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Libs/javafx/lib/javafx.graphics.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Libs/javafx/lib/javafx.base.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Libs/javafx/lib/javafx.media.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Libs/javafx/lib/javafx.swing.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Libs/javafx/lib/javafx.web.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
