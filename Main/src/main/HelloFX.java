@@ -3,9 +3,11 @@ package main;
 import javafx.application.Application;
 import javafx.event.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -14,54 +16,53 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import main.DB.DBController;
+import main.Panes.InputDBForm;
+import main.Panes.QuestionOptionPane;
+import java.util.List;
 
 public class HelloFX extends Application {
+    private Point2D fromCordsToPixels(Point2D cords, double xMax, double yMax, double scale) {
+        double x = cords.getX()*scale;
+        double y = cords.getY()*scale;
+
+        double px = x + xMax/2.0;
+        double py = yMax/2.0 - y;
+
+        return new Point2D(px, py);
+    }
+
     @Override
     public void start(Stage stage) {
-        Label label = new Label("Hello, JavaFX!");
-        label.setTextFill(Color.AQUA);
-        StackPane stackPane = new StackPane();
-
-        Circle circle = new Circle(100);
-        Color color = new Color(22.0/255,53.0/255,19.0/255,1.0);
-        circle.setFill(color);
-
-        stackPane.getChildren().add(circle);
-        stackPane.getChildren().add(label);
 
         VBox vbox = new VBox();
-        vbox.getChildren().add(stackPane);
-        Button button = new Button();
-        button.setText("Нажми меня!");
-        button.addEventHandler(ActionEvent.ACTION,new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                if(label.getText() == "Hello, JavaFX!")
-                    label.setText("Кнопка была нажата!");
-                else{
-                    label.setText("Hello, JavaFX!");
-                }
-            }
-        });
 
-        StackPane stackPane1 = new StackPane();
-        stackPane1.getChildren().add(button);
+        DBController dbController = new DBController("jdbc:sqlite:Main/src/main/DB/app.db");
 
-        Canvas canvas = new Canvas(800, 600);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        InputDBForm inputDBForm = new InputDBForm(dbController);
+        vbox.getChildren().add(new StackPane(inputDBForm));
 
-        gc.setFill(Color.ALICEBLUE);
-
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-
-        vbox.getChildren().add(stackPane1);
-        vbox.getChildren().add(new StackPane(canvas));
         vbox.setSpacing(50);
         vbox.setPadding(new Insets(15));
         vbox.setBackground(new Background(new BackgroundFill(Color.CORAL, new CornerRadii(20), new Insets(5))));
 
-
+        Button getDB = new Button("Получить");
+        getDB.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                List<Question> list = dbController.getAllQuestions();
+                if(!list.isEmpty()){
+                    for(Question q : list){
+                        System.out.println(q);
+                    }
+                    System.out.println("-----------------------");
+                }
+                else{
+                    System.out.println("Пустая БД");
+                }
+            }
+        });
+        vbox.getChildren().add(new StackPane(getDB));
 
         Scene scene = new Scene(vbox);
         stage.setScene(scene);

@@ -40,4 +40,16 @@ public class Question {
                 ", complexity=" + complexity +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Question question = (Question) o;
+        return correctID == question.correctID && complexity == question.complexity && Objects.equals(questionText, question.questionText) && Objects.equals(answers, question.answers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(questionText, answers, correctID, complexity);
+    }
 }
