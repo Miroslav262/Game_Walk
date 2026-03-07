@@ -51,6 +51,7 @@ public class InputDBForm extends Pane {
         inputQuestion = new TextArea();
         inputQuestion.setPromptText("Введите вопрос...");
 
+
         inputQuestion.setPrefWidth(300);
         inputQuestion.setPrefHeight(100);
         inputQuestion.setWrapText(true);
@@ -89,8 +90,8 @@ public class InputDBForm extends Pane {
         });
 
         HBox inputQBar = new HBox();
-        inputQBar.setSpacing(20);
-
+        inputQBar.setSpacing(7);
+        inputQBar.setPadding(new Insets(10));
         inputQBar.getChildren().add(inputQuestion);
         inputQBar.getChildren().add(comboBox);
 

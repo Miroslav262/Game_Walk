@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.event.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -19,6 +20,9 @@ import javafx.stage.Stage;
 import main.DB.DBController;
 import main.Panes.InputDBForm;
 import main.Panes.QuestionOptionPane;
+import main.Panes.QuestionWatchingPane;
+import main.Panes.WatchingDB;
+
 import java.util.List;
 
 public class HelloFX extends Application {
@@ -39,12 +43,13 @@ public class HelloFX extends Application {
 
         DBController dbController = new DBController("jdbc:sqlite:Main/src/main/DB/app.db");
 
-        InputDBForm inputDBForm = new InputDBForm(dbController);
-        vbox.getChildren().add(new StackPane(inputDBForm));
+
 
         vbox.setSpacing(50);
         vbox.setPadding(new Insets(15));
         vbox.setBackground(new Background(new BackgroundFill(Color.CORAL, new CornerRadii(20), new Insets(5))));
+
+
 
         Button getDB = new Button("Получить");
         getDB.setOnAction(new EventHandler<ActionEvent>() {
@@ -63,6 +68,19 @@ public class HelloFX extends Application {
             }
         });
         vbox.getChildren().add(new StackPane(getDB));
+        //vbox.getChildren().add(new WatchingDB(dbController));
+        InputDBForm inputDBForm = new InputDBForm(dbController);
+
+        HBox dbWorker = new HBox();
+        dbWorker.setMaxHeight(1000);
+        dbWorker.setAlignment(Pos.CENTER);
+        dbWorker.getChildren().add(inputDBForm);
+        dbWorker.getChildren().add(new WatchingDB(dbController));
+        dbWorker.setSpacing(5);
+        dbWorker.setPadding(new Insets(5));
+        dbWorker.setBackground(new Background(new BackgroundFill(Color.DARKCYAN, new CornerRadii(20), new Insets(5))));
+
+        vbox.getChildren().add(dbWorker);
 
         Scene scene = new Scene(vbox);
         stage.setScene(scene);
