@@ -4,11 +4,15 @@ import files.Question;
 
 public class QuestionElement implements WayElement{
 
-    private Question question;
 
-    public QuestionElement(Question question){
-        this.question = question;
+    public QuestionElement(){
     }
+
+    @Override
+    public String toString() {
+        return "QuestionElement{}";
+    }
+
     @Override
     public void action() {
         //вызов формочки с заданием вопроса

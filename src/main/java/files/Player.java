@@ -8,23 +8,40 @@ public class Player {
     private String name;
     private Color color;
     private int position;
+    private boolean isPassMotion;
 
     public Player(String name, Color color){
         position = 0;
         this.color = color;
         this.name = name;
+        this.isPassMotion = false;
     }
 
     public String getName() {
+
         return name;
     }
 
     public Color getColor() {
+
         return color;
     }
 
     public int getPosition() {
+
         return position;
+    }
+
+    public boolean isPassMotion() {
+        return isPassMotion;
+    }
+
+    public void passMation(){
+        this.isPassMotion = true;
+    }
+
+    public void continueMotion(){
+        this.isPassMotion = false;
     }
 
     @Override

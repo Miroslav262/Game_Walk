@@ -1,6 +1,9 @@
 package files;
 
 import files.Panes.DBWorker;
+import files.WayElements.Way;
+import files.WayElements.WayElement;
+import files.WayElements.WayGenerator;
 import javafx.application.Application;
 import javafx.event.*;
 import javafx.geometry.Insets;
@@ -13,6 +16,9 @@ import javafx.stage.Stage;
 import main.java.DB.DBController;
 
 
+import javax.imageio.IIOException;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class HelloFX extends Application {
@@ -68,6 +74,30 @@ public class HelloFX extends Application {
         stage.show();
         stage.setMaximized(true);
 
+        try{
+            List<WayElement> result = WayGenerator.genWay("src/main/java/files/config.yaml");
+            for(WayElement el :  result){
+                System.out.println(el);
+            }
+        }
+        catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+        catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        catch (InvocationTargetException e) {
+            System.out.println(e.getMessage());
+        }
+        catch (NoSuchMethodException e) {
+            System.out.println(e.getMessage());
+        }
+        catch (InstantiationException e) {
+            System.out.println(e.getMessage());
+        }
+        catch (IllegalAccessException e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 }
