@@ -34,7 +34,7 @@ public class InputDBForm extends Pane {
         VBox sMain = new VBox();
         sMain.setBackground(new Background(new BackgroundFill(new Color(20.0/255, 51.0/255, 6.0/255, 1),  new CornerRadii(5), new Insets(0))));
         sMain.setSpacing(5);
-        sMain.setPadding(new Insets(5));
+        sMain.setPadding(new Insets(10));
 
         main = new VBox();
 
@@ -127,6 +127,8 @@ public class InputDBForm extends Pane {
                     System.out.println(q);
 
                     dbController.addQuestion(q);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Данные успешно добавлены");
+                    alert.showAndWait();
                 }
                 catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());

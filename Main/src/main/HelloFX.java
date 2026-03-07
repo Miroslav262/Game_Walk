@@ -18,10 +18,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import main.DB.DBController;
-import main.Panes.InputDBForm;
-import main.Panes.QuestionOptionPane;
-import main.Panes.QuestionWatchingPane;
-import main.Panes.WatchingDB;
+import main.Panes.*;
 
 import java.util.List;
 
@@ -68,18 +65,8 @@ public class HelloFX extends Application {
             }
         });
         vbox.getChildren().add(new StackPane(getDB));
-        //vbox.getChildren().add(new WatchingDB(dbController));
-        InputDBForm inputDBForm = new InputDBForm(dbController);
 
-        HBox dbWorker = new HBox();
-        dbWorker.setMaxHeight(1000);
-        dbWorker.setAlignment(Pos.CENTER);
-        dbWorker.getChildren().add(inputDBForm);
-        dbWorker.getChildren().add(new WatchingDB(dbController));
-        dbWorker.setSpacing(5);
-        dbWorker.setPadding(new Insets(5));
-        dbWorker.setBackground(new Background(new BackgroundFill(Color.DARKCYAN, new CornerRadii(20), new Insets(5))));
-
+        DBWorker dbWorker = new DBWorker(dbController);
         vbox.getChildren().add(dbWorker);
 
         Scene scene = new Scene(vbox);
