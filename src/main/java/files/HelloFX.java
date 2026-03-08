@@ -1,5 +1,6 @@
 package files;
 
+import files.Events.WayElementEvent;
 import files.Panes.DBWorker;
 import files.WayElements.Way;
 import files.WayElements.WayElement;
@@ -19,6 +20,7 @@ import main.java.DB.DBController;
 import javax.imageio.IIOException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 
 public class HelloFX extends Application {
@@ -65,6 +67,25 @@ public class HelloFX extends Application {
         });
         vbox.getChildren().add(new StackPane(getDB));
 
+        Way way = new Way(vbox, new PlayerController(Arrays.asList(new Player[]{
+                new Player("Вася", Color.AQUA),
+                new Player("Петя", Color.RED),
+                new Player("Гриша", Color.BEIGE)
+        })));
+
+
+        vbox.addEventHandler(WayElementEvent.ANY, e -> {
+            System.out.println("Наступил на: "+e.getElement().toString());
+        });
+        Dice dice = new Dice();
+        for(int i = 0; i<20;i++){
+            int roll = dice.roll();
+            System.out.println(roll);
+            way.doStep(roll);
+        }
+
+
+
         DBWorker dbWorker = new DBWorker(dbController);
         vbox.getChildren().add(dbWorker);
 
@@ -74,30 +95,8 @@ public class HelloFX extends Application {
         stage.show();
         stage.setMaximized(true);
 
-        try{
-            List<WayElement> result = WayGenerator.genWay("src/main/java/files/config.yaml");
-            for(WayElement el :  result){
-                System.out.println(el);
-            }
-        }
-        catch (IOException e){
-            System.out.println(e.getMessage());
-        }
-        catch (ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-        catch (InvocationTargetException e) {
-            System.out.println(e.getMessage());
-        }
-        catch (NoSuchMethodException e) {
-            System.out.println(e.getMessage());
-        }
-        catch (InstantiationException e) {
-            System.out.println(e.getMessage());
-        }
-        catch (IllegalAccessException e) {
-            System.out.println(e.getMessage());
-        }
+
+
 
     }
 }

@@ -10,9 +10,13 @@ public class Way {
     private List<WayElement> elements;
     private PlayerController playerController;
     private Pane gameRoot;
-    public Way(Pane gameRoot, DBController dbController, PlayerController playerController){
+    public Way(Pane gameRoot, PlayerController playerController){
         try{
             elements = WayGenerator.genWay("src/main/java/files/config.yaml");
+            for(WayElement w: elements){
+                System.out.println(w);
+            }
+
             this.playerController = playerController;
             this.gameRoot = gameRoot;
             }
@@ -45,6 +49,12 @@ public class Way {
             }
             gameRoot.fireEvent(elements.get(playerController.getcurrentplayer().getPosition()).getEvent());
         }
+
+        Player next = playerController.getNext();
+
+        System.out.println("Ходил: " + player);
+        System.out.println("Следующим ходит: " + next);
+
     }
 
 
