@@ -31,6 +31,9 @@ public class Player {
 
         return position;
     }
+    public void setPosition(int position){
+        this.position = position;
+    }
 
     public boolean isPassMotion() {
         return isPassMotion;

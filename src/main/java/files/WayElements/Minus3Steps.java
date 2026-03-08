@@ -1,12 +1,23 @@
 package files.WayElements;
 
-public class Minus3Steps implements WayElement{
-    @Override
-    public void action() {
+import files.Events.FinishEvent;
+import files.Events.StepEvent;
+import javafx.event.Event;
+import javafx.scene.image.Image;
 
-    }
+public class Minus3Steps extends WayElement {
 
     public Minus3Steps() {
+    }
+
+    @Override
+    public Image getImage() {
+        return new Image("/images/Minus3Steps.png");
+    }
+
+    @Override
+    public Event getEvent() {
+        return new StepEvent(this, -3);
     }
 
     @Override

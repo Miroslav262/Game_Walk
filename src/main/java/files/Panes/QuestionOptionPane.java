@@ -53,7 +53,7 @@ public class QuestionOptionPane extends Pane {
         delButton.setBackground(new Background(new BackgroundFill(Color.ALICEBLUE, new CornerRadii(4), new Insets(0))));
         delButton.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(1), new Insets(0))));
 
-        Image delButImage = new Image("/images/delete_13364424.png");
+        Image delButImage = new Image("/images/Trash_Can.png");
         ImageView view = new ImageView(delButImage);
 
         view.setPreserveRatio(true);

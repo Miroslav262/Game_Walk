@@ -1,9 +1,22 @@
 package files.WayElements;
 
-public class Finish implements WayElement{
-    @Override
-    public void action() {
+import files.Events.FinishEvent;
+import javafx.event.Event;
+import javafx.scene.image.Image;
 
+public class Finish extends WayElement {
+
+    public Finish() {
+    }
+
+    @Override
+    public Image getImage() {
+        return new Image("/images/Finish.png");
+    }
+
+    @Override
+    public Event getEvent() {
+        return new FinishEvent(this);
     }
 
     @Override
@@ -11,6 +24,4 @@ public class Finish implements WayElement{
         return "Finish{}";
     }
 
-    public Finish() {
-    }
 }

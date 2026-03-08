@@ -1,20 +1,28 @@
 package files.WayElements;
 
-import files.Question;
+import files.Events.QuestionEvent;
+import files.Events.StepEvent;
+import javafx.event.Event;
+import javafx.scene.image.Image;
 
-public class QuestionElement implements WayElement{
+public class QuestionElement extends WayElement {
 
 
     public QuestionElement(){
     }
 
     @Override
-    public String toString() {
-        return "QuestionElement{}";
+    public Image getImage() {
+        return new Image("/images/Question.png");
     }
 
     @Override
-    public void action() {
-        //вызов формочки с заданием вопроса
+    public Event getEvent() {
+        return new QuestionEvent(this);
+    }
+
+    @Override
+    public String toString() {
+        return "QuestionElement{}";
     }
 }

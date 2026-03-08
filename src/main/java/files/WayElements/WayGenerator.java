@@ -10,7 +10,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class WayGenerator{
-    public static List<WayElement> genWay(String configFile) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public static List<WayElement> genWay(String configFile)
+             throws IOException,
+                    ClassNotFoundException,
+                    NoSuchMethodException,
+                    InvocationTargetException,
+                    InstantiationException,
+                    IllegalAccessException {
 
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         JsonNode root = mapper.readTree(new File(configFile));

@@ -17,12 +17,7 @@ public class PlayerController {
         current = (current+1 == players.size()) ? 0 : current+1;
         return players.get(current);
     }
-
-    public void upgradeState(Player player){
-        int id = players.indexOf(player);
-
-        if(id != -1){
-            players.set(id, player);
-        }
+    public Player getcurrentplayer(){
+        return players.get(current);
     }
 }

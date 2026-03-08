@@ -1,12 +1,23 @@
 package files.WayElements;
 
-public class TotalSwap implements WayElement{
-    @Override
-    public void action() {
+import files.Events.QuestionEvent;
+import files.Events.TotalSwapEvent;
+import javafx.event.Event;
+import javafx.scene.image.Image;
 
-    }
+public class TotalSwap extends WayElement {
 
     public TotalSwap() {
+    }
+
+    @Override
+    public Image getImage() {
+        return new Image("/images/TotalSwap.png");
+    }
+
+    @Override
+    public Event getEvent() {
+        return new TotalSwapEvent(this);
     }
 
     @Override
