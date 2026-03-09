@@ -1,7 +1,7 @@
 package files.WayElements;
 
-import files.Events.QuestionEvent;
 import files.Events.SkipTurnEvent;
+import files.PlayerController;
 import javafx.event.Event;
 import javafx.scene.image.Image;
 
@@ -17,7 +17,7 @@ public class SkipNextTurn extends WayElement {
 
     @Override
     public Event getEvent() {
-        return new SkipTurnEvent(this);
+        return new SkipTurnEvent(this, PlayerController.getInstance().getCurrentPlayer());
     }
 
     @Override

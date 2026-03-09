@@ -1,7 +1,10 @@
 package files;
 
+import files.Events.SkipTurnEvent;
 import files.Events.WayElementEvent;
+import files.Panes.BlockerPane;
 import files.Panes.DBWorker;
+import files.Panes.FromEventPanes.SkipTurnPane;
 import files.WayElements.Way;
 import files.WayElements.WayElement;
 import files.WayElements.WayGenerator;
@@ -9,8 +12,10 @@ import javafx.application.Application;
 import javafx.event.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -37,17 +42,19 @@ public class HelloFX extends Application {
     @Override
     public void start(Stage stage) {
 
-        VBox vbox = new VBox();
+        PlayerController.createInstance(Arrays.asList(new Player[]{
+                new Player("Вася", Color.AQUA),
+                new Player("Петя", Color.RED),
+                new Player("Гриша", Color.BEIGE)
+        }));
+
+
 
         DBController dbController = new DBController("jdbc:sqlite:src/main/java/files/DB/app.db");
 
 
 
-        vbox.setSpacing(50);
-        vbox.setPadding(new Insets(15));
-        vbox.setBackground(new Background(new BackgroundFill(Color.CORAL, new CornerRadii(20), new Insets(5))));
-
-
+/*
 
         Button getDB = new Button("Получить");
         getDB.setOnAction(new EventHandler<ActionEvent>() {
@@ -67,16 +74,29 @@ public class HelloFX extends Application {
         });
         vbox.getChildren().add(new StackPane(getDB));
 
-        Way way = new Way(vbox, new PlayerController(Arrays.asList(new Player[]{
-                new Player("Вася", Color.AQUA),
-                new Player("Петя", Color.RED),
-                new Player("Гриша", Color.BEIGE)
-        })));
-
-
-        vbox.addEventHandler(WayElementEvent.ANY, e -> {
-            System.out.println("Наступил на: "+e.getElement().toString());
+*/
+        SkipTurnPane.getInstance().boundsInParentProperty().addListener((o, oldV, newV) -> {
+            System.out.println("SkipTurnPane size = " + newV);
         });
+
+
+        VBox vbox = new VBox();
+        vbox.setSpacing(50);
+        vbox.setPadding(new Insets(15));
+        vbox.setBackground(new Background(new BackgroundFill(Color.CORAL, new CornerRadii(20), new Insets(5))));
+
+
+        vbox.addEventHandler(SkipTurnEvent.TYPE, e -> {
+            SkipTurnPane.show(e.getPlayer());
+            System.out.println(e.getPlayer().toString() +"пропускает ход");
+        });
+
+        StackPane sMain = new StackPane();
+        sMain.getChildren().add(vbox);
+        sMain.getChildren().add(BlockerPane.getInstance());
+        sMain.getChildren().add(SkipTurnPane.getInstance());
+
+        Way way = new Way(vbox);
         Dice dice = new Dice();
         for(int i = 0; i<20;i++){
             int roll = dice.roll();
@@ -86,10 +106,7 @@ public class HelloFX extends Application {
 
 
 
-        DBWorker dbWorker = new DBWorker(dbController);
-        vbox.getChildren().add(dbWorker);
-
-        Scene scene = new Scene(vbox);
+        Scene scene = new Scene(sMain);
         stage.setScene(scene);
         stage.setTitle("JavaFX Test");
         stage.show();
@@ -97,6 +114,23 @@ public class HelloFX extends Application {
 
 
 
+/*
+        javafx.scene.layout.VBox modalPane = new VBox(10);
+        modalPane.setStyle("-fx-background-color: white; -fx-padding: 20;");
+        modalPane.setVisible(true);
+
+        Label label = new Label("Игрок ??? пропускает ход");
+        Button button = new Button("Продолжить");
+
+        button.setOnAction(e -> {
+            modalPane.setVisible(false);
+            BlockerPane.setVisibleState(false);
+        });
+
+        modalPane.getChildren().addAll(label, button);
+
+        vbox.getChildren().add(new StackPane(modalPane));
+        */
 
     }
 }
