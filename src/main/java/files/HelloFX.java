@@ -1,32 +1,21 @@
 package files;
 
 import files.Events.SkipTurnEvent;
-import files.Events.WayElementEvent;
 import files.Panes.BlockerPane;
 import files.Panes.DBWorker;
-import files.Panes.FromEventPanes.SkipTurnPane;
+import files.Panes.EventPanes.SkipTurnPane;
 import files.WayElements.Way;
-import files.WayElements.WayElement;
-import files.WayElements.WayGenerator;
 import javafx.application.Application;
-import javafx.event.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import main.java.DB.DBController;
 
 
-import javax.imageio.IIOException;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.List;
 
 public class HelloFX extends Application {
     private Point2D fromCordsToPixels(Point2D cords, double xMax, double yMax, double scale) {
@@ -48,12 +37,16 @@ public class HelloFX extends Application {
                 new Player("Гриша", Color.BEIGE)
         }));
 
-
+        VBox vbox = new VBox();
+        vbox.setSpacing(50);
+        vbox.setPadding(new Insets(15));
+        vbox.setBackground(new Background(new BackgroundFill(Color.CORAL, new CornerRadii(20), new Insets(5))));
 
         DBController dbController = new DBController("jdbc:sqlite:src/main/java/files/DB/app.db");
 
+        DBWorker dbWorker = new DBWorker(dbController);
 
-
+        vbox.getChildren().add(dbWorker);
 /*
 
         Button getDB = new Button("Получить");
@@ -80,10 +73,7 @@ public class HelloFX extends Application {
         });
 
 
-        VBox vbox = new VBox();
-        vbox.setSpacing(50);
-        vbox.setPadding(new Insets(15));
-        vbox.setBackground(new Background(new BackgroundFill(Color.CORAL, new CornerRadii(20), new Insets(5))));
+
 
 
         vbox.addEventHandler(SkipTurnEvent.TYPE, e -> {

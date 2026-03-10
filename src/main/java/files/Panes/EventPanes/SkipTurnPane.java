@@ -1,10 +1,9 @@
-package files.Panes.FromEventPanes;
+package files.Panes.EventPanes;
 
 import files.Panes.BlockerPane;
 import files.Player;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 

@@ -1,8 +1,7 @@
 package files.Events;
 
-import files.Panes.FromEventPanes.SkipTurnPane;
+import files.Panes.EventPanes.SkipTurnPane;
 import files.Player;
-import files.WayElements.Way;
 import files.WayElements.WayElement;
 import javafx.event.EventType;
 
