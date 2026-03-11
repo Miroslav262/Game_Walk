@@ -3,11 +3,13 @@ package files;
 import files.Events.FinishEvent;
 import files.Events.SkipTurnEvent;
 import files.Events.StepEvent;
+import files.Events.TotalSwapEvent;
 import files.Panes.BlockerPane;
 import files.Panes.DBWorker;
 import files.Panes.EventPanes.FinishPane;
 import files.Panes.EventPanes.SkipTurnPane;
 import files.Panes.EventPanes.StepPane;
+import files.Panes.EventPanes.TotalSwapPane;
 import files.WayElements.Finish;
 import files.WayElements.Way;
 import javafx.application.Application;
@@ -98,6 +100,9 @@ public class HelloFX extends Application {
 
             StepPane.show(player, steps);
         });
+        vbox.addEventHandler(TotalSwapEvent.TYPE, e -> {
+            TotalSwapPane.show();
+        });
 
 
         StackPane sMain = new StackPane();
@@ -106,6 +111,7 @@ public class HelloFX extends Application {
         sMain.getChildren().add(SkipTurnPane.getInstance());
         sMain.getChildren().add(FinishPane.getInstance());
         sMain.getChildren().add(StepPane.getInstance());
+        sMain.getChildren().add(TotalSwapPane.getInstance());
 
 
         Way.createNewWay(vbox);

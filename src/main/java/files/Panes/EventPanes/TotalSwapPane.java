@@ -13,13 +13,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
-public class FinishPane extends StackPane {
-
-    private static FinishPane instance= new FinishPane();
+public class TotalSwapPane extends StackPane {
+    private static TotalSwapPane instance= new TotalSwapPane();
 
     private final VBox modalPane;
     private Label label;
-    private FinishPane(){
+    private TotalSwapPane(){
 
         modalPane = new VBox(10);
         modalPane.setBackground(new Background(new BackgroundFill(Color.web("#008A00"), new CornerRadii(10), new Insets(0))));
@@ -29,10 +28,10 @@ public class FinishPane extends StackPane {
         modalPane.setMaxWidth(Screen.getPrimary().getVisualBounds().getWidth()*0.5);
         modalPane.setAlignment(Pos.CENTER);
 
-        label = new Label("Игрок ??? побеждает!");
+        label = new Label("Все игроки случайно меняются местами");
         label.setFont(Font.font("Comic Sans MS", 20));
 
-        Image image = new Image("/images/Finish.png");
+        Image image = new Image("/images/TotalSwap.png");
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
         imageView.setFitHeight(Screen.getPrimary().getVisualBounds().getHeight()*0.25);
@@ -58,12 +57,11 @@ public class FinishPane extends StackPane {
         this.setVisible(false);
     }
 
-    public static FinishPane getInstance(){
+    public static TotalSwapPane getInstance(){
         return instance;
     }
 
-    public static void show(Player player) {
-        instance.label.setText("Игрок " + player.getName() + " побеждает!");
+    public static void show() {
         BlockerPane.setVisibleState(true);
         instance.setVisible(true);
         instance.toFront();

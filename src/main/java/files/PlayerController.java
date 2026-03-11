@@ -1,5 +1,6 @@
 package files;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,7 +37,27 @@ public class PlayerController {
     }
 
     public Player getCurrentPlayer() {
+
         return players.get(current);
     }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public static void totalSwap() {
+        List<Player> players = instance.players;
+        List<Integer> positions = players.stream()
+                .map(Player::getPosition)
+                .toList();
+
+        List<Integer> shuffled = new ArrayList<>(positions);
+        Collections.shuffle(shuffled);
+
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).setPosition(shuffled.get(i));
+        }
+    }
+
 }
 
