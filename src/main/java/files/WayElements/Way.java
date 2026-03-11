@@ -6,20 +6,27 @@ import files.Events.PassMotion;
 import files.Player;
 import files.PlayerController;
 import javafx.scene.layout.Pane;
-import jdk.jfr.Event;
-import main.java.DB.DBController;
+
 public class Way {
+    private static Way instance;
+
+    public static Way getInstance(){
+        return  instance;
+    }
+
+    public static void createNewWay(Pane gameRoot){
+        instance = new Way(gameRoot);
+    }
+
     private List<WayElement> elements;
-    private PlayerController playerController;
     private Pane gameRoot;
-    public Way(Pane gameRoot){
+    private Way(Pane gameRoot){
         try{
             elements = WayGenerator.genWay("src/main/java/files/config.yaml");
             for(WayElement w: elements){
                 System.out.println(w);
             }
 
-            this.playerController = PlayerController.getInstance();
             this.gameRoot = gameRoot;
             }
         catch (Throwable throwable){
@@ -32,12 +39,10 @@ public class Way {
         return this.elements;
     }
 
-    public PlayerController getPlayerController(){
-        return this.playerController;
-    }
+
 
     public void doStep(int steps){
-        Player player = playerController.getCurrentPlayer();
+        Player player = PlayerController.getInstance().getCurrentPlayer();
 
         if(player.isPassMotion()){
             player.continueMotion();
@@ -45,27 +50,27 @@ public class Way {
         }
         else{
             if(player.getPosition()+steps >= elements.size()){
-                playerController.getCurrentPlayer().setPosition(elements.size()-1);
+                PlayerController.getInstance().getCurrentPlayer().setPosition(elements.size()-1);
             }
             else{
-                playerController.getCurrentPlayer().setPosition(player.getPosition()+steps);
+                PlayerController.getInstance().getCurrentPlayer().setPosition(player.getPosition()+steps);
             }
 
-            gameRoot.fireEvent(elements.get(playerController.getCurrentPlayer().getPosition()).getEvent());
+            gameRoot.fireEvent(elements.get(PlayerController.getInstance().getCurrentPlayer().getPosition()).getEvent());
         }
-        Player next = playerController.getNext();
+        Player next = PlayerController.getInstance().getNext();
 
         System.out.println("Ходил: " + player);
         System.out.println("Следующим ходит: " + next);
     }
 
     public void doBackSteps(int steps){
-        Player player = playerController.getCurrentPlayer();
+        Player player = PlayerController.getInstance().getCurrentPlayer();
         if(player.getPosition()-steps < 0 ){
-            playerController.getCurrentPlayer().setPosition(0);
+            PlayerController.getInstance().getCurrentPlayer().setPosition(0);
         }
         else{
-            playerController.getCurrentPlayer().setPosition(player.getPosition()-steps);
+            PlayerController.getInstance().getCurrentPlayer().setPosition(player.getPosition()-steps);
         }
     }
 

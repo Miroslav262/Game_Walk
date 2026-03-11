@@ -2,16 +2,21 @@ package files;
 
 import files.Events.FinishEvent;
 import files.Events.SkipTurnEvent;
+import files.Events.StepEvent;
 import files.Panes.BlockerPane;
 import files.Panes.DBWorker;
 import files.Panes.EventPanes.FinishPane;
 import files.Panes.EventPanes.SkipTurnPane;
+import files.Panes.EventPanes.StepPane;
 import files.WayElements.Finish;
 import files.WayElements.Way;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -45,9 +50,9 @@ public class HelloFX extends Application {
         vbox.setPadding(new Insets(15));
         vbox.setBackground(new Background(new BackgroundFill(Color.CORAL, new CornerRadii(20), new Insets(5))));
 
-        DBWorker dbWorker = new DBWorker(DBController.getInstance());
+      //  DBWorker dbWorker = new DBWorker(DBController.getInstance());
 
-        vbox.getChildren().add(dbWorker);
+       // vbox.getChildren().add(dbWorker);
 /*
 
         Button getDB = new Button("Получить");
@@ -76,21 +81,52 @@ public class HelloFX extends Application {
         vbox.addEventHandler(SkipTurnEvent.TYPE, e -> {
             SkipTurnPane.show(e.getPlayer());
         });
+        vbox.addEventHandler(StepEvent.TYPE, e -> {
+            Player player = PlayerController.getInstance().getCurrentPlayer();
+            int steps = e.getSteps();
+
+            int newPos = player.getPosition() + steps;
+
+            if (newPos >= Way.getInstance().getElements().size()) {
+                FinishPane.show(player);
+                return;
+            }
+
+            if (newPos < 0) newPos = 0;
+
+            player.setPosition(newPos);
+
+            StepPane.show(player, steps);
+        });
+
 
         StackPane sMain = new StackPane();
         sMain.getChildren().add(vbox);
         sMain.getChildren().add(BlockerPane.getInstance());
+        sMain.getChildren().add(SkipTurnPane.getInstance());
         sMain.getChildren().add(FinishPane.getInstance());
-/*
-        Way way = new Way(vbox);
+        sMain.getChildren().add(StepPane.getInstance());
+
+
+        Way.createNewWay(vbox);
         Dice dice = new Dice();
+        /*
         for(int i = 0; i<20;i++){
             int roll = dice.roll();
             System.out.println(roll);
             way.doStep(roll);
         }
-
- */
+*/
+        Button nextMove = new Button("Следующий ход");
+        nextMove.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                int roll = dice.roll();
+                System.out.println(roll);
+                Way.getInstance().doStep(roll);
+            }
+        });
+        vbox.getChildren().add(nextMove);
 
         Scene scene = new Scene(sMain);
         stage.setScene(scene);
