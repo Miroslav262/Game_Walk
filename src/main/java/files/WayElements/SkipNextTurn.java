@@ -17,7 +17,7 @@ public class SkipNextTurn extends WayElement {
 
     @Override
     public Event getEvent() {
-        return new SkipTurnEvent(this, PlayerController.getInstance().getCurrentPlayer());
+        return new SkipTurnEvent(this);
     }
 
     @Override

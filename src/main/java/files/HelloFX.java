@@ -1,9 +1,12 @@
 package files;
 
+import files.Events.FinishEvent;
 import files.Events.SkipTurnEvent;
 import files.Panes.BlockerPane;
 import files.Panes.DBWorker;
+import files.Panes.EventPanes.FinishPane;
 import files.Panes.EventPanes.SkipTurnPane;
+import files.WayElements.Finish;
 import files.WayElements.Way;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -68,23 +71,16 @@ public class HelloFX extends Application {
         vbox.getChildren().add(new StackPane(getDB));
 
 */
-        SkipTurnPane.getInstance().boundsInParentProperty().addListener((o, oldV, newV) -> {
-            System.out.println("SkipTurnPane size = " + newV);
-        });
 
-
-
-
-
-        vbox.addEventHandler(SkipTurnEvent.TYPE, e -> {
-            SkipTurnPane.show(e.getPlayer());
-            System.out.println(e.getPlayer().toString() +"пропускает ход");
+        vbox.addEventHandler(FinishEvent.TYPE, e -> {
+            FinishPane.show(e.getPlayer());
+            System.out.println(e.getPlayer().toString() +"побеждает");
         });
 
         StackPane sMain = new StackPane();
         sMain.getChildren().add(vbox);
         sMain.getChildren().add(BlockerPane.getInstance());
-        sMain.getChildren().add(SkipTurnPane.getInstance());
+        sMain.getChildren().add(FinishPane.getInstance());
 
         Way way = new Way(vbox);
         Dice dice = new Dice();

@@ -2,6 +2,7 @@ package files.Events;
 
 import files.Panes.EventPanes.SkipTurnPane;
 import files.Player;
+import files.PlayerController;
 import files.WayElements.WayElement;
 import javafx.event.EventType;
 
@@ -12,10 +13,10 @@ public class SkipTurnEvent extends WayElementEvent {
     public static final EventType<SkipTurnEvent> TYPE =
             new EventType<>(WayElementEvent.ANY, "SKIP_TURN_EVENT");
 
-    public SkipTurnEvent(WayElement element, Player player) {
+    public SkipTurnEvent(WayElement element) {
         super(TYPE, element);
 
-        this.player = player;
+        this.player = PlayerController.getInstance().getCurrentPlayer();
 
         player.passMation();
         System.out.println(player.toString() + "пропускает ход");
