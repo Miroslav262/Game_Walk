@@ -45,9 +45,7 @@ public class HelloFX extends Application {
         vbox.setPadding(new Insets(15));
         vbox.setBackground(new Background(new BackgroundFill(Color.CORAL, new CornerRadii(20), new Insets(5))));
 
-        DBController dbController = new DBController("jdbc:sqlite:src/main/java/files/DB/app.db");
-
-        DBWorker dbWorker = new DBWorker(dbController);
+        DBWorker dbWorker = new DBWorker(DBController.getInstance());
 
         vbox.getChildren().add(dbWorker);
 /*
@@ -74,14 +72,16 @@ public class HelloFX extends Application {
 
         vbox.addEventHandler(FinishEvent.TYPE, e -> {
             FinishPane.show(e.getPlayer());
-            System.out.println(e.getPlayer().toString() +"побеждает");
+        });
+        vbox.addEventHandler(SkipTurnEvent.TYPE, e -> {
+            SkipTurnPane.show(e.getPlayer());
         });
 
         StackPane sMain = new StackPane();
         sMain.getChildren().add(vbox);
         sMain.getChildren().add(BlockerPane.getInstance());
         sMain.getChildren().add(FinishPane.getInstance());
-
+/*
         Way way = new Way(vbox);
         Dice dice = new Dice();
         for(int i = 0; i<20;i++){
@@ -90,7 +90,7 @@ public class HelloFX extends Application {
             way.doStep(roll);
         }
 
-
+ */
 
         Scene scene = new Scene(sMain);
         stage.setScene(scene);

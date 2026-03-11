@@ -6,23 +6,27 @@ import java.util.Collections;
 import java.util.List;
 
 public class QuestionsController {
-    private final DBController dbController;
     private List<Question> questions;
 
-    public QuestionsController(DBController dbController){
-        this.dbController = dbController;
+    private static QuestionsController instance = new QuestionsController();
+
+    public static QuestionsController getInstance(){
+        return instance;
+    }
+
+    private QuestionsController(){
         getQuestions();
     }
 
     private void getQuestions(){
-        questions = dbController.getAllQuestions();
+        questions = DBController.getInstance().getAllQuestions();
         Collections.shuffle(questions);
     }
 
-    public Question getNext(){
-        if(questions.isEmpty()){
-           getQuestions();
+    public static Question getNext(){
+        if(instance.questions.isEmpty()){
+            instance.getQuestions();
         }
-        return questions.removeFirst();
+        return instance.questions.removeFirst();
     }
 }

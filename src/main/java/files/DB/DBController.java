@@ -8,7 +8,14 @@ import java.util.List;
 public class DBController {
     private Connection connection;
 
-    public DBController(String url){
+    private static DBController instance = new DBController("jdbc:sqlite:src/main/java/files/DB/app.db");
+
+    public static DBController getInstance(){
+        return instance;
+    }
+
+
+    private DBController(String url){
         try{
             connection = DriverManager.getConnection(url);
 
