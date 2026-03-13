@@ -58,6 +58,14 @@ public class PlayerController {
             players.get(i).setPosition(shuffled.get(i));
         }
     }
+    public static Player getForName(String name){
+        for(Player player : getInstance().players){
+            if(player.getName() == name){
+                return player;
+            }
+        }
+        return null;
+    }
 
 }
 

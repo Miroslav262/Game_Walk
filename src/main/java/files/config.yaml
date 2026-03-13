@@ -4,8 +4,8 @@ mapSize:
 
 wayProbabilities:
   QuestionElement: 0.05
-  TotalSwap: 0.75
+  TotalSwap: 0.05
   Plus3Steps: 0.05
   Minus3Steps: 0.05
   SkipNextTurn: 0.05
-  SkipAnotherPlayerTurn: 0.05
+  SkipAnotherPlayerTurn: 0.75

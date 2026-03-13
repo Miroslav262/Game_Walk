@@ -1,15 +1,9 @@
 package files;
 
-import files.Events.FinishEvent;
-import files.Events.SkipTurnEvent;
-import files.Events.StepEvent;
-import files.Events.TotalSwapEvent;
+import files.Events.*;
 import files.Panes.BlockerPane;
 import files.Panes.DBWorker;
-import files.Panes.EventPanes.FinishPane;
-import files.Panes.EventPanes.SkipTurnPane;
-import files.Panes.EventPanes.StepPane;
-import files.Panes.EventPanes.TotalSwapPane;
+import files.Panes.EventPanes.*;
 import files.WayElements.Finish;
 import files.WayElements.Way;
 import javafx.application.Application;
@@ -104,6 +98,10 @@ public class HelloFX extends Application {
             TotalSwapPane.show();
         });
 
+        vbox.addEventHandler(SkipAnotherPlayerTurnEvent.TYPE, e -> {
+            SkipAnotherPlayerTurnPane.show();
+        });
+
 
         StackPane sMain = new StackPane();
         sMain.getChildren().add(vbox);
@@ -112,7 +110,7 @@ public class HelloFX extends Application {
         sMain.getChildren().add(FinishPane.getInstance());
         sMain.getChildren().add(StepPane.getInstance());
         sMain.getChildren().add(TotalSwapPane.getInstance());
-
+        sMain.getChildren().add(SkipAnotherPlayerTurnPane.getInstance());
 
         Way.createNewWay(vbox);
         Dice dice = new Dice();
