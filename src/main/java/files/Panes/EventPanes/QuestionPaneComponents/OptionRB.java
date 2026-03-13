@@ -7,23 +7,25 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import java.util.HashSet;
+public class OptionRB extends StackPane {
 
-public class OptionRB extends StackPane{
-    private HBox hBox;
-    private TextField textField;
-    private RadioButton radioButton;
+    private final HBox hBox;
+    private final TextField textField;
+    private final RadioButton radioButton;
 
     public OptionRB(String label){
-        hBox = new HBox();
-        hBox.setBackground(new Background(new BackgroundFill(Color.web("#2CA90B"), new CornerRadii(5), new Insets(0))));
-        hBox.setSpacing(5);
+        hBox = new HBox(5);
+        hBox.setBackground(new Background(
+                new BackgroundFill(Color.web("#2CA90B"), new CornerRadii(5), Insets.EMPTY)
+        ));
         hBox.setPadding(new Insets(5));
 
         textField = new TextField(label);
         textField.setEditable(false);
         textField.setFont(Font.font("Comic Sans MS", 20));
-        textField.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(5), new Insets(0))));
+        textField.setBackground(new Background(
+                new BackgroundFill(Color.WHITE, new CornerRadii(5), Insets.EMPTY)
+        ));
 
         radioButton = new RadioButton();
 
@@ -45,8 +47,10 @@ public class OptionRB extends StackPane{
         this.getChildren().add(hBox);
     }
 
-    public void setNewState(Boolean isCorrect){
-        textField.setBackground(new Background(new BackgroundFill(isCorrect ? Color.GREEN : Color.RED , new CornerRadii(5), new Insets(0))));
+    public void setNewState(boolean isCorrect){
+        textField.setBackground(new Background(
+                new BackgroundFill(isCorrect ? Color.GREEN : Color.RED, new CornerRadii(5), Insets.EMPTY)
+        ));
         radioButton.setDisable(true);
     }
 

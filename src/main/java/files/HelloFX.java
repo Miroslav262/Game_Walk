@@ -80,7 +80,7 @@ public class HelloFX extends Application {
             SkipTurnPane.show(e.getPlayer());
         });
         vbox.addEventHandler(StepEvent.TYPE, e -> {
-            Player player = PlayerController.getInstance().getCurrentPlayer();
+            Player player = e.getPlayer();   // ← ВАЖНО!
             int steps = e.getSteps();
 
             int newPos = player.getPosition() + steps;
@@ -95,17 +95,29 @@ public class HelloFX extends Application {
             player.setPosition(newPos);
 
             StepPane.show(player, steps);
+            e.consume();
         });
+
         vbox.addEventHandler(TotalSwapEvent.TYPE, e -> {
             TotalSwapPane.show();
         });
 
         vbox.addEventHandler(SkipAnotherPlayerTurnEvent.TYPE, e -> {
             SkipAnotherPlayerTurnPane.show();
+
         });
 
         vbox.addEventHandler(QuestionEvent.TYPE, e -> {
-            QuestionPane.show(PlayerController.getInstance().getCurrentPlayer());
+            vbox.addEventHandler(QuestionEvent.TYPE, event -> {
+                Player player = PlayerController.getInstance().getCurrentPlayer();
+
+                QuestionPane.getInstance(vbox).show(player);
+
+                BlockerPane.setVisibleState(true);
+
+                event.consume();
+            });
+
         });
 
 
@@ -117,7 +129,7 @@ public class HelloFX extends Application {
         sMain.getChildren().add(StepPane.getInstance());
         sMain.getChildren().add(TotalSwapPane.getInstance());
         sMain.getChildren().add(SkipAnotherPlayerTurnPane.getInstance());
-        sMain.getChildren().add(QuestionPane.getUpdatedInstance(vbox));
+        sMain.getChildren().add(QuestionPane.getInstance(vbox));
 
         Way.createNewWay(vbox);
         Dice dice = new Dice();

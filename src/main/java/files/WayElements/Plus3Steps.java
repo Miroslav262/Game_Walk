@@ -1,6 +1,7 @@
 package files.WayElements;
 
 import files.Events.StepEvent;
+import files.PlayerController;
 import javafx.event.Event;
 import javafx.scene.image.Image;
 
@@ -16,7 +17,7 @@ public class Plus3Steps extends WayElement {
 
     @Override
     public Event getEvent() {
-        return new StepEvent(this, 3);
+        return new StepEvent(this, PlayerController.getInstance().getCurrentPlayer(),3);
     }
 
     @Override

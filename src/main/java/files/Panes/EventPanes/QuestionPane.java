@@ -13,9 +13,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -25,33 +22,33 @@ public class QuestionPane extends StackPane {
 
     private static QuestionPane instance;
 
-    private final Label label;
     private final VBox modalPane;
-    private final Question question;
+    private final Label label;
+    private Question question;
     private QuestionView questionView;
     private boolean isChecked;
-    private Pane gameRoot;
+    private final Pane gameRoot;
+    private Player questionPlayer;
 
     private QuestionPane(Pane gameRoot) {
         this.gameRoot = gameRoot;
-        question = QuestionsController.getNext();
-        isChecked = false;
-        modalPane = new VBox();
-        modalPane.setBackground(new Background(new BackgroundFill(Color.web("#008A00"), new CornerRadii(10), new Insets(0))));
 
-        modalPane.setVisible(true);
-        modalPane.setMaxHeight(Screen.getPrimary().getVisualBounds().getHeight()*0.5);
-        modalPane.setMaxWidth(Screen.getPrimary().getVisualBounds().getWidth()*0.5);
+        modalPane = new VBox(5);
+        modalPane.setBackground(new Background(
+                new BackgroundFill(Color.web("#008A00"), new CornerRadii(10), Insets.EMPTY)
+        ));
+        modalPane.setMaxHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.5);
+        modalPane.setMaxWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.5);
         modalPane.setAlignment(Pos.CENTER);
-        modalPane.setSpacing(5);
         modalPane.setPadding(new Insets(5));
-
 
         label = new Label("Игрок ??? отвечает на вопрос");
         label.setFont(Font.font("Comic Sans MS", 20));
 
         Button button = new Button("Ответить");
-        button.setBackground(new Background(new BackgroundFill(Color.web("#2CA90B"), new CornerRadii(5), new Insets(0))));
+        button.setBackground(new Background(
+                new BackgroundFill(Color.web("#2CA90B"), new CornerRadii(5), Insets.EMPTY)
+        ));
         button.setFont(Font.font("Comic Sans MS", 20));
         button.setBorder(new Border(new BorderStroke(
                 Color.BLACK,
@@ -60,53 +57,88 @@ public class QuestionPane extends StackPane {
                 new BorderWidths(2)
         )));
 
-
         button.setOnAction(e -> {
-            if(!isChecked){
+            if (!isChecked) {
+
                 isChecked = true;
                 button.setText("Продолжить");
-                for(int i = 0; i<questionView.getOptionRBList().size(); i++){
-                    questionView.getOptionRBList().get(i).setNewState(question.getCorrectID() == i+1);
+
+                for (int i = 0; i < questionView.getOptionRBList().size(); i++) {
+                    questionView.getOptionRBList().get(i)
+                            .setNewState(question.getCorrectID() == i + 1);
                 }
-            }
-            else{
-                hide();
-                BlockerPane.setVisibleState(false);
-                if( questionView.getToggleGroup().getSelectedToggle().equals(
+                if(questionView.getToggleGroup().getSelectedToggle().equals(
                         questionView.getOptionRBList().get(question.getCorrectID()-1).getRadioButton())){
-                    label.setText("Игрок " + PlayerController.getInstance().getCurrentPlayer().getName() + " ответил правильно!");
+                    label.setText("Игрок " + questionPlayer.getName() + " отвечает правильно");
                 }
                 else{
-                    gameRoot.fireEvent(new StepEvent(Way.getInstance()
-                            .getElements()
-                            .get(PlayerController.getInstance().getCurrentPlayer().getPosition()),
-                            (-1)*question.getComplexity()));
+                    label.setText("Игрок " + questionPlayer.getName() + " отвечает неправильно");
                 }
-                QuestionPane.getUpdatedInstance(gameRoot);
+            } else {
+
+                hide();
+                BlockerPane.setVisibleState(false);
+
+                boolean correct =
+                        questionView.getToggleGroup().getSelectedToggle() ==
+                                questionView.getOptionRBList()
+                                        .get(question.getCorrectID() - 1)
+                                        .getRadioButton();
+
+                if (!correct) {
+                    // неправильный ответ — шаг назад
+                    WayElement element = Way.getInstance()
+                            .getElements()
+                            .get(questionPlayer.getPosition());
+
+                    gameRoot.fireEvent(new StepEvent(
+                            element,
+                            questionPlayer,
+                            -question.getComplexity()
+                    ));
+                }
 
             }
-
         });
 
-        Image image = new Image("/images/Question.png");
-        ImageView imageView = new ImageView(image);
+        // картинка
+        var image = new javafx.scene.image.Image("/images/Question.png");
+        var imageView = new javafx.scene.image.ImageView(image);
         imageView.setPreserveRatio(true);
-        imageView.setFitHeight(Screen.getPrimary().getVisualBounds().getHeight()*0.25);
+        imageView.setFitHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.25);
 
-        questionView = new QuestionView(question);
 
-        modalPane.getChildren().addAll(label,imageView,questionView,button);
+
+        modalPane.getChildren().addAll(label, imageView /* questionView будет позже */, button);
         this.getChildren().add(modalPane);
         this.setVisible(false);
     }
 
-
-    public static QuestionPane getUpdatedInstance(Pane gameRoot){
-        instance = new QuestionPane(gameRoot);
-        return  instance;
+    public static QuestionPane getInstance(Pane gameRoot) {
+        if (instance == null) {
+            instance = new QuestionPane(gameRoot);
+            gameRoot.getChildren().add(instance);
+        }
+        return instance;
     }
 
+    private void loadNewQuestion() {
+        this.question = QuestionsController.getNext();
+        this.isChecked = false;
+
+        if (questionView != null) {
+            modalPane.getChildren().remove(questionView);
+        }
+
+        questionView = new QuestionView(question);
+
+        modalPane.getChildren().add(modalPane.getChildren().size() - 1, questionView);
+    }
+
+
     public static void show(Player player) {
+        instance.questionPlayer = player;
+        instance.loadNewQuestion();
         instance.label.setText("Игрок " + player.getName() + " отвечает на вопрос");
         BlockerPane.setVisibleState(true);
         instance.setVisible(true);
@@ -114,6 +146,8 @@ public class QuestionPane extends StackPane {
     }
 
     public static void hide() {
-        instance.setVisible(false);
+        if (instance != null) {
+            instance.setVisible(false);
+        }
     }
 }
