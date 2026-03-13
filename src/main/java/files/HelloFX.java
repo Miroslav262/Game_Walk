@@ -4,6 +4,8 @@ import files.Events.*;
 import files.Panes.BlockerPane;
 import files.Panes.DBWorker;
 import files.Panes.EventPanes.*;
+import files.Panes.EventPanes.QuestionPaneComponents.OptionRB;
+import files.Panes.EventPanes.QuestionPaneComponents.QuestionView;
 import files.WayElements.Finish;
 import files.WayElements.Way;
 import javafx.application.Application;
@@ -102,6 +104,10 @@ public class HelloFX extends Application {
             SkipAnotherPlayerTurnPane.show();
         });
 
+        vbox.addEventHandler(QuestionEvent.TYPE, e -> {
+            QuestionPane.show(PlayerController.getInstance().getCurrentPlayer());
+        });
+
 
         StackPane sMain = new StackPane();
         sMain.getChildren().add(vbox);
@@ -111,6 +117,7 @@ public class HelloFX extends Application {
         sMain.getChildren().add(StepPane.getInstance());
         sMain.getChildren().add(TotalSwapPane.getInstance());
         sMain.getChildren().add(SkipAnotherPlayerTurnPane.getInstance());
+        sMain.getChildren().add(QuestionPane.getUpdatedInstance(vbox));
 
         Way.createNewWay(vbox);
         Dice dice = new Dice();
@@ -128,9 +135,11 @@ public class HelloFX extends Application {
                 int roll = dice.roll();
                 System.out.println(roll);
                 Way.getInstance().doStep(roll);
+
             }
         });
         vbox.getChildren().add(nextMove);
+
 
         Scene scene = new Scene(sMain);
         stage.setScene(scene);

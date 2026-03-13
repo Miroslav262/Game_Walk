@@ -57,7 +57,7 @@ public class SkipTurnPane extends StackPane {
         imageView.setPreserveRatio(true);
         imageView.setFitHeight(Screen.getPrimary().getVisualBounds().getHeight()*0.25);
 
-        modalPane.getChildren().addAll(new StackPane(label),new StackPane(imageView),new StackPane(button));
+        modalPane.getChildren().addAll(label,imageView,button);
         this.getChildren().add(modalPane);
         this.setVisible(false);
     }
