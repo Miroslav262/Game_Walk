@@ -21,6 +21,11 @@ public class Finish extends WayElement {
     }
 
     @Override
+    public Image getMiniImage() {
+        return new Image("/images/Optimazed/FinishOptimized.png");
+    }
+
+    @Override
     public String toString() {
         return "Finish{}";
     }

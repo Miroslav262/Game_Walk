@@ -21,6 +21,11 @@ public class TotalSwap extends WayElement {
     }
 
     @Override
+    public Image getMiniImage() {
+        return new Image("/images/Optimazed/TotalSwapOptimized.png");
+    }
+
+    @Override
     public String toString() {
         return "TotalSwap{}";
     }

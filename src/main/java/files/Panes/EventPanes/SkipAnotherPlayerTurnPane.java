@@ -73,6 +73,8 @@ public class SkipAnotherPlayerTurnPane extends StackPane {
             else {
                 hide();
                 BlockerPane.setVisibleState(false);
+                //System.out.println("Пропускает ход: " + SkipAnotherPlayerTurnPane.getInstance().skippingPlayer);
+                SkipAnotherPlayerTurnPane.getInstance().skippingPlayer.passMation();
                 SkipTurnPane.show(SkipAnotherPlayerTurnPane.getInstance().skippingPlayer);
             }
 

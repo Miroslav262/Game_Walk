@@ -22,6 +22,11 @@ public class QuestionElement extends WayElement {
     }
 
     @Override
+    public Image getMiniImage() {
+        return new Image("/images/Optimazed/QuestionOptimized.png");
+    }
+
+    @Override
     public String toString() {
         return "QuestionElement{}";
     }

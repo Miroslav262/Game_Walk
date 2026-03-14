@@ -1,6 +1,5 @@
 package files.WayElements;
 
-import files.Events.QuestionEvent;
 import files.Events.SkipAnotherPlayerTurnEvent;
 import javafx.event.Event;
 import javafx.scene.image.Image;
@@ -18,6 +17,11 @@ public class SkipAnotherPlayerTurn extends WayElement {
     @Override
     public Event getEvent() {
         return new SkipAnotherPlayerTurnEvent(this);
+    }
+
+    @Override
+    public Image getMiniImage() {
+        return new Image("/images/Optimazed/SkipAnotherPlayerTurnOptimized.png");
     }
 
     @Override

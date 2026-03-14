@@ -21,6 +21,11 @@ public class Plus3Steps extends WayElement {
     }
 
     @Override
+    public Image getMiniImage() {
+        return new Image("/images/Optimazed/PlusStepsOptimized.png");
+    }
+
+    @Override
     public String toString() {
         return "Plus3Steps{}";
     }

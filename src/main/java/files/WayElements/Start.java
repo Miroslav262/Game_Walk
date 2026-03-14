@@ -20,6 +20,11 @@ public class Start extends WayElement {
     }
 
     @Override
+    public Image getMiniImage() {
+        return new Image("/images/Optimazed/StartOptimized.png");
+    }
+
+    @Override
     public String toString() {
         return "Start{}";
     }

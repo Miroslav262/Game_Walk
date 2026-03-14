@@ -1,90 +1,146 @@
-
-
 package files;
 
+import files.Events.*;
+import files.Panes.BlockerPane;
+import files.Panes.EventPanes.*;
+import files.WayElements.Way;
+import javafx.application.Application;
 
-public class Main {
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.canvas.*;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
-    /*@Override
+
+import java.util.Arrays;
+
+public class Main extends Application {
+
+    @Override
     public void start(Stage stage) {
-        Canvas canvas = new Canvas();
 
-        StackPane root = new StackPane(canvas);
 
-        canvas.widthProperty().bind(root.widthProperty());
-        canvas.heightProperty().bind(root.heightProperty());
-
-        Scene scene = new Scene(root);
+        StackPane sMain = new StackPane();
+        Scene scene = new Scene(sMain);
         stage.setScene(scene);
-        stage.setTitle("JavaFX Test");
-        stage.setMaximized(true);
+        stage.setTitle("Энергоквест");
         stage.show();
+        stage.setMaximized(true);
 
-        CurveGenerator curveGenerator = new CurveGenerator();
-        BeziersCurve curve = curveGenerator.getCurve();
+        PlayerController.createInstance(Arrays.asList(new Player[]{
+                new Player("Вася", Color.AQUA),
+                new Player("Петя", Color.RED),
+                new Player("Гриша", Color.BEIGE)
+        }));
 
-        //canvas.widthProperty().addListener((o, oldV, newV) -> draw(canvas, curve));
-        //canvas.heightProperty().addListener((o, oldV, newV) -> draw(canvas, curve));
+        HBox hbox = new HBox();
+        hbox.setSpacing(50);
+        hbox.setPadding(new Insets(15));
+        BackgroundImage bgImage = new BackgroundImage(
+                new Image("/images/Background.jpg", true),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(
+                        BackgroundSize.AUTO,
+                        BackgroundSize.AUTO,
+                        false, false,
+                        true,
+                        true
+                )
+        );
 
+        hbox.setBackground(new Background(bgImage));
+
+        hbox.addEventHandler(FinishEvent.TYPE, e -> {
+            FinishPane.show(e.getPlayer());
+        });
+        hbox.addEventHandler(SkipTurnEvent.TYPE, e -> {
+            SkipTurnPane.show(e.getPlayer());
+        });
+        hbox.addEventHandler(StepEvent.TYPE, e -> {
+            Player player = e.getPlayer();
+            int steps = e.getSteps();
+
+            int newPos = player.getPosition() + steps;
+
+            if (newPos >= Way.getInstance().getElements().size()) {
+                FinishPane.show(player);
+                return;
+            }
+
+            if (newPos < 0) newPos = 0;
+
+            player.setPosition(newPos);
+
+            StepPane.show(player, steps);
+            e.consume();
+        });
+
+        hbox.addEventHandler(TotalSwapEvent.TYPE, e -> {
+            TotalSwapPane.show();
+        });
+
+        hbox.addEventHandler(SkipAnotherPlayerTurnEvent.TYPE, e -> {
+            SkipAnotherPlayerTurnPane.show();
+
+        });
+
+        hbox.addEventHandler(QuestionEvent.TYPE, e -> {
+            hbox.addEventHandler(QuestionEvent.TYPE, event -> {
+                Player player = PlayerController.getInstance().getCurrentPlayer();
+
+                QuestionPane.getInstance(hbox).show(player);
+
+                BlockerPane.setVisibleState(true);
+
+                event.consume();
+            });
+
+        });
+
+
+
+        sMain.getChildren().add(hbox);
+        sMain.getChildren().add(BlockerPane.getInstance());
+        sMain.getChildren().add(SkipTurnPane.getInstance());
+        sMain.getChildren().add(FinishPane.getInstance());
+        sMain.getChildren().add(StepPane.getInstance());
+        sMain.getChildren().add(TotalSwapPane.getInstance());
+        sMain.getChildren().add(SkipAnotherPlayerTurnPane.getInstance());
+        sMain.getChildren().add(QuestionPane.getInstance(hbox));
+/*
+        Way.createNewWay(hbox);
+        Dice dice = new Dice();
+
+        Button nextMove = new Button("Следующий ход");
+        nextMove.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                int roll = dice.roll();
+                System.out.println(roll);
+                Way.getInstance().doStep(roll);
+
+            }
+        });
+        hbox.getChildren().add(nextMove);
+
+*/
+        Canvas canvas = new Canvas();
         GraphicsContext g = canvas.getGraphicsContext2D();
-        g.setFill(Color.BLACK);
 
-        Point2D a = Utils.fromCordsToPixels(
-                new Point2D(-5, -5),
-                canvas.getWidth(),
-                canvas.getHeight(),
-                50
-        );
+        canvas.widthProperty().bind(stage.heightProperty());
+        canvas.heightProperty().bind(stage.heightProperty());
 
-        Point2D b = Utils.fromCordsToPixels(
-                new Point2D(5, 5),
-                canvas.getWidth(),
-                canvas.getHeight(),
-                50
-        );
+        Way.createNewWay(hbox);
 
-        double x = Math.min(a.getX(), b.getX());
-        double y = Math.min(a.getY(), b.getY());
-        double w = Math.abs(a.getX() - b.getX());
-        double h = Math.abs(a.getY() - b.getY());
-
-        g.fillRect(x, y, w, h);
-
-        for(int i = 0; i<1; i++){
-
-
-            g.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
-
-
-            BeziersCurve curve1 = curveGenerator.getCurve();
-            draw(canvas, curve1, 3, 75);
-            draw(canvas, curve1, 15, 15);
-        }
-
-
+        HBox.setHgrow(canvas, Priority.ALWAYS);
+        GameDrawer gameDrawer = new GameDrawer(canvas);
+        hbox.getChildren().add(canvas);
 
     }
-
-    private void draw(Canvas canvas, BeziersCurve curve, int size, int n) {
-        GraphicsContext g = canvas.getGraphicsContext2D();
-        //g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        Point2D[] points = curve.getPoints(n);
-
-        for (Point2D point : points) {
-            Point2D nPoint = Utils.fromCordsToPixels(
-                    point,
-                    canvas.getWidth(),
-                    canvas.getHeight(),
-                    50
-            );
-
-            g.fillOval(nPoint.getX(), nPoint.getY(), size, size);
-        }
-
-     */
-
 }
-
-
-

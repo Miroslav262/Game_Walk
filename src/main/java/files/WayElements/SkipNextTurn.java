@@ -21,6 +21,11 @@ public class SkipNextTurn extends WayElement {
     }
 
     @Override
+    public Image getMiniImage() {
+        return new Image("/images/Optimazed/SkipNextTurnOptimized.png");
+    }
+
+    @Override
     public String toString() {
         return "SkipNextTurn{}";
     }
