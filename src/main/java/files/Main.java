@@ -6,11 +6,14 @@ import files.Panes.EventPanes.*;
 import files.WayElements.Way;
 import javafx.application.Application;
 
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -130,17 +133,17 @@ public class Main extends Application {
         hbox.getChildren().add(nextMove);
 
 */
-        Canvas canvas = new Canvas();
-        GraphicsContext g = canvas.getGraphicsContext2D();
-
-        canvas.widthProperty().bind(stage.heightProperty());
-        canvas.heightProperty().bind(stage.heightProperty());
-
         Way.createNewWay(hbox);
+        GameDrawer gameDrawer = new GameDrawer();
+        gameDrawer.getGraphicsContext2D().getCanvas().widthProperty().bind(stage.heightProperty());
+        gameDrawer.getGraphicsContext2D().getCanvas().heightProperty().bind(stage.heightProperty());
 
-        HBox.setHgrow(canvas, Priority.ALWAYS);
-        GameDrawer gameDrawer = new GameDrawer(canvas);
-        hbox.getChildren().add(canvas);
+
+
+        hbox.getChildren().add(gameDrawer.getGraphicsContext2D().getCanvas());
+
+        Platform.runLater(gameDrawer::draw);
+
 
     }
 }

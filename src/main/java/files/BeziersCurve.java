@@ -69,6 +69,10 @@ public class BeziersCurve {
             result[i] = getValue(t);
         }
 
+        result[0] = a;
+        result[count] = d;
+
         return result;
     }
+
 }
