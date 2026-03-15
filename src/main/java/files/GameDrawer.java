@@ -1,5 +1,6 @@
 package files;
 
+import files.PlayerLocationOnMap.PlayerLocation;
 import files.WayElements.Way;
 
 import javafx.scene.canvas.Canvas;
@@ -9,17 +10,29 @@ import javafx.scene.paint.Color;
 
 import javafx.scene.image.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class GameDrawer extends Canvas{
     private GraphicsContext g;
     private BeziersCurve beziersCurve;
 
+    private static GameDrawer instance = new GameDrawer();
+
+    public static GameDrawer getInstance(){
+        return instance;
+    }
+
     private static final int CURVE_POINTS = 150;
     private final double SCALE_FACTOR = 0.09;
     private final double CIRCLE_RADIUS = 50;
+    private final double GAME_PIECES_SCALER = 0.2;
+    private final double GAME_PICIES_RADIUS = 0.3;
+    private final Point2D[] miniPoints;
 
 
-    public GameDrawer(){
+    private GameDrawer(){
         g = this.getGraphicsContext2D();
         CurveGenerator curveGenerator = new CurveGenerator();
         beziersCurve = curveGenerator.getCurve();
@@ -31,12 +44,12 @@ public class GameDrawer extends Canvas{
                 (obs, oldV, newV) -> this.draw()
         );
 
+        miniPoints = beziersCurve.getPoints(150);
         this.draw();
     }
 
     public void draw(){
         this.getGraphicsContext2D().clearRect(0,0, getHeight(), getWidth());
-        Point2D[] miniPoints = beziersCurve.getPoints(150);
 
         for(Point2D point2D : miniPoints){
             g.setFill(Color.BLACK);
@@ -104,6 +117,60 @@ public class GameDrawer extends Canvas{
                 sizeSF
         );
 
+        int n = Way.getInstance().getElements().size();
+        List<List<Player>> nPlayersOnPos = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            nPlayersOnPos.add(new ArrayList<>());
+        }
+
+        for (Player player : PlayerController.getInstance().getPlayers()) {
+            int pos = player.getPosition();
+            nPlayersOnPos.get(pos).add(player);
+        }
+
+        System.out.println(nPlayersOnPos);
+
+        for (int i = 0; i < nPlayersOnPos.size(); i++) {
+
+            int playersOnThisCell = nPlayersOnPos.get(i).size();
+
+            if (playersOnThisCell == 0)
+                continue;
+
+            int idx = (int) Math.round((double) i / (count - 1) * (CURVE_POINTS - 1));
+
+            List<Point2D> positions =
+                    PlayerLocation.getByN(playersOnThisCell, miniPoints[idx], GAME_PICIES_RADIUS).getPoints();
+
+            for (int j = 0; j < playersOnThisCell; j++) {
+                Image image = nPlayersOnPos.get(i).get(j).getImage();
+
+                Point2D truePosition = Utils.fromCordsToPixels(positions.get(j), g.getCanvas().getWidth(), g.getCanvas().getHeight(),
+                        g.getCanvas().heightProperty().get()*SCALE_FACTOR);
+                System.out.println(truePosition);
+                g.drawImage(
+                        image,
+                        truePosition.getX() - image.getWidth() * GAME_PIECES_SCALER/2,
+                        truePosition.getY() - image.getHeight() * GAME_PIECES_SCALER/2,
+                        image.getWidth() * GAME_PIECES_SCALER,
+                        image.getHeight() * GAME_PIECES_SCALER
+                );
+            }
+        }
+
+        /*
+
+
+        Image img = new Image("/images/gamePiece.png");
+
+        Image tinted = Utils.shiftHue(img, Color.RED);
+        g.drawImage(tinted, 300, 300);
+
+*/
 
     }
+
+
+
 }

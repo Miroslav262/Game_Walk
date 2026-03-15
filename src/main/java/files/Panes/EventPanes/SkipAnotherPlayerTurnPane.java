@@ -1,6 +1,7 @@
 package files.Panes.EventPanes;
 
 import files.Events.SkipAnotherPlayerTurnEvent;
+import files.GameDrawer;
 import files.Panes.BlockerPane;
 import files.Player;
 import files.PlayerController;
@@ -73,9 +74,11 @@ public class SkipAnotherPlayerTurnPane extends StackPane {
             else {
                 hide();
                 BlockerPane.setVisibleState(false);
-                //System.out.println("Пропускает ход: " + SkipAnotherPlayerTurnPane.getInstance().skippingPlayer);
+
                 SkipAnotherPlayerTurnPane.getInstance().skippingPlayer.passMation();
                 SkipTurnPane.show(SkipAnotherPlayerTurnPane.getInstance().skippingPlayer);
+
+                GameDrawer.getInstance().draw();
             }
 
         });

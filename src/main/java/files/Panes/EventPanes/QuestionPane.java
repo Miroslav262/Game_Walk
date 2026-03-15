@@ -1,12 +1,9 @@
 package files.Panes.EventPanes;
 
+import files.*;
 import files.Events.StepEvent;
 import files.Panes.BlockerPane;
 import files.Panes.EventPanes.QuestionPaneComponents.QuestionView;
-import files.Player;
-import files.PlayerController;
-import files.Question;
-import files.QuestionsController;
 import files.WayElements.Way;
 import files.WayElements.WayElement;
 import javafx.geometry.Insets;
@@ -86,7 +83,6 @@ public class QuestionPane extends StackPane {
                                         .getRadioButton();
 
                 if (!correct) {
-                    // неправильный ответ — шаг назад
                     WayElement element = Way.getInstance()
                             .getElements()
                             .get(questionPlayer.getPosition());

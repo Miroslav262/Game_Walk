@@ -1,5 +1,6 @@
 package files.Panes.EventPanes;
 
+import files.GameDrawer;
 import files.Panes.BlockerPane;
 import files.Player;
 import javafx.geometry.Insets;
@@ -51,6 +52,7 @@ public class FinishPane extends StackPane {
         button.setOnAction(e -> {
             hide();
             BlockerPane.setVisibleState(false);
+            GameDrawer.getInstance().draw();
         });
 
         modalPane.getChildren().addAll(label,imageView,button);

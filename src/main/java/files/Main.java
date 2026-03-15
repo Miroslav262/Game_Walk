@@ -7,18 +7,24 @@ import files.WayElements.Way;
 import javafx.application.Application;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.*;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
+import java.time.Clock;
 import java.util.Arrays;
 
 public class Main extends Application {
@@ -116,8 +122,15 @@ public class Main extends Application {
         sMain.getChildren().add(TotalSwapPane.getInstance());
         sMain.getChildren().add(SkipAnotherPlayerTurnPane.getInstance());
         sMain.getChildren().add(QuestionPane.getInstance(hbox));
-/*
+
         Way.createNewWay(hbox);
+
+
+        GameDrawer.getInstance().getGraphicsContext2D().getCanvas().widthProperty().bind(stage.heightProperty());
+        GameDrawer.getInstance().getGraphicsContext2D().getCanvas().heightProperty().bind(stage.heightProperty());
+
+        hbox.getChildren().add(GameDrawer.getInstance().getGraphicsContext2D().getCanvas());
+
         Dice dice = new Dice();
 
         Button nextMove = new Button("Следующий ход");
@@ -127,22 +140,15 @@ public class Main extends Application {
                 int roll = dice.roll();
                 System.out.println(roll);
                 Way.getInstance().doStep(roll);
-
+                //GameDrawer.getInstance().draw();
             }
         });
-        hbox.getChildren().add(nextMove);
-
-*/
-        Way.createNewWay(hbox);
-        GameDrawer gameDrawer = new GameDrawer();
-        gameDrawer.getGraphicsContext2D().getCanvas().widthProperty().bind(stage.heightProperty());
-        gameDrawer.getGraphicsContext2D().getCanvas().heightProperty().bind(stage.heightProperty());
+        VBox vBox = new VBox(nextMove);
+        vBox.setAlignment(Pos.CENTER);
+        hbox.getChildren().add(vBox);
 
 
 
-        hbox.getChildren().add(gameDrawer.getGraphicsContext2D().getCanvas());
-
-        Platform.runLater(gameDrawer::draw);
 
 
     }

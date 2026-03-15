@@ -1,5 +1,6 @@
 package files;
 
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import java.util.Objects;
@@ -9,12 +10,14 @@ public class Player {
     private Color color;
     private int position;
     private boolean isPassMotion;
+    private Image image;
 
     public Player(String name, Color color){
         position = 0;
         this.color = color;
         this.name = name;
         this.isPassMotion = false;
+        image = Utils.shiftHue(new Image("/images/gamePiece.png"), color);
     }
 
     public String getName() {
@@ -25,6 +28,10 @@ public class Player {
     public Color getColor() {
 
         return color;
+    }
+
+    public Image getImage() {
+        return image;
     }
 
     public int getPosition() {

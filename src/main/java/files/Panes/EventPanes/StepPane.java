@@ -1,5 +1,6 @@
 package files.Panes.EventPanes;
 
+import files.GameDrawer;
 import files.Panes.BlockerPane;
 import files.Player;
 import javafx.geometry.Insets;
@@ -50,6 +51,7 @@ public class StepPane extends StackPane {
         button.setOnAction(e -> {
             hide();
             BlockerPane.setVisibleState(false);
+            GameDrawer.getInstance().draw();
         });
 
         imageView = new ImageView(new Image("/images/Plus3Steps.png"));
