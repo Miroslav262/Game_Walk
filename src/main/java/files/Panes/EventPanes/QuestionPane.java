@@ -32,7 +32,7 @@ public class QuestionPane extends StackPane {
 
         modalPane = new VBox(5);
         modalPane.setBackground(new Background(
-                new BackgroundFill(Color.web("#008A00"), new CornerRadii(10), Insets.EMPTY)
+                new BackgroundFill(Utils.myGreenColor, new CornerRadii(10), Insets.EMPTY)
         ));
         modalPane.setMaxHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.5);
         modalPane.setMaxWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.5);

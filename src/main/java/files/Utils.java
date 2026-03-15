@@ -9,6 +9,8 @@ import javafx.scene.paint.Color;
 
 public class Utils {
 
+    public static Color myGreenColor = Color.web("#008A0080");
+
     public static Point2D fromCordsToPixels(Point2D cords, double xMax, double yMax, double scale) {
         double x = cords.getX()*scale;
         double y = cords.getY()*scale;

@@ -1,30 +1,28 @@
 package files;
 
 import files.Events.*;
-import files.Panes.BlockerPane;
+import files.Panes.*;
 import files.Panes.EventPanes.*;
 import files.WayElements.Way;
 import javafx.application.Application;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.*;
-import javafx.scene.canvas.Canvas;
+
 import javafx.scene.control.Button;
-import javafx.scene.effect.ColorAdjust;
+
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.ZoomEvent;
+
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
-import java.time.Clock;
 import java.util.Arrays;
 
 public class Main extends Application {
@@ -35,11 +33,13 @@ public class Main extends Application {
 
         StackPane sMain = new StackPane();
         Scene scene = new Scene(sMain);
+
         stage.setScene(scene);
         stage.setTitle("Энергоквест");
-        stage.show();
-        stage.setMaximized(true);
 
+        stage.setMaximized(true);
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.show();
         PlayerController.createInstance(Arrays.asList(new Player[]{
                 new Player("Вася", Color.AQUA),
                 new Player("Петя", Color.RED),
@@ -47,6 +47,8 @@ public class Main extends Application {
         }));
 
         HBox hbox = new HBox();
+
+
         hbox.setSpacing(50);
         hbox.setPadding(new Insets(15));
         BackgroundImage bgImage = new BackgroundImage(
@@ -123,6 +125,9 @@ public class Main extends Application {
         sMain.getChildren().add(SkipAnotherPlayerTurnPane.getInstance());
         sMain.getChildren().add(QuestionPane.getInstance(hbox));
 
+        MainMenuOptions.initMainMenuOptions(hbox);
+        sMain.getChildren().add(MainMenuOptions.getInstance());
+
         Way.createNewWay(hbox);
 
 
@@ -132,7 +137,7 @@ public class Main extends Application {
         hbox.getChildren().add(GameDrawer.getInstance().getGraphicsContext2D().getCanvas());
 
         Dice dice = new Dice();
-
+/*
         Button nextMove = new Button("Следующий ход");
         nextMove.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -140,15 +145,49 @@ public class Main extends Application {
                 int roll = dice.roll();
                 System.out.println(roll);
                 Way.getInstance().doStep(roll);
-                //GameDrawer.getInstance().draw();
             }
         });
+        */
+
+        /*
         VBox vBox = new VBox(nextMove);
-        vBox.setAlignment(Pos.CENTER);
+
         hbox.getChildren().add(vBox);
 
+*/
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        hbox.getChildren().add(spacer);
 
 
+        VBox vBox = new VBox();
+        vBox.setAlignment(Pos.TOP_RIGHT);
+        vBox.setPadding(new Insets(10));
+        vBox.setSpacing(20);
+
+        HBox boxForSettingsBut = new HBox();
+
+
+        boxForSettingsBut.getChildren().add(new SettingButton(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                MainMenuOptions.show();
+            }
+        }));
+        boxForSettingsBut.setAlignment(Pos.CENTER_RIGHT);
+
+
+
+        vBox.getChildren().addAll(boxForSettingsBut, new PlayerInfo(), new StyledButton("Бросить кубик", 20, new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                int roll = dice.roll();
+                System.out.println(roll);
+                Way.getInstance().doStep(roll);
+            }
+        }));
+
+        hbox.getChildren().add(vBox);
 
 
     }

@@ -5,6 +5,7 @@ import files.GameDrawer;
 import files.Panes.BlockerPane;
 import files.Player;
 import files.PlayerController;
+import files.Utils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -28,7 +29,7 @@ public class SkipAnotherPlayerTurnPane extends StackPane {
     private SkipAnotherPlayerTurnPane() {
 
         modalPane = new VBox(10);
-        modalPane.setBackground(new Background(new BackgroundFill(Color.web("#008A00"), new CornerRadii(10), new Insets(0))));
+        modalPane.setBackground(new Background(new BackgroundFill(Utils.myGreenColor, new CornerRadii(10), new Insets(0))));
 
         modalPane.setVisible(true);
         modalPane.setMaxHeight(Screen.getPrimary().getVisualBounds().getHeight()*0.5);

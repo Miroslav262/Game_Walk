@@ -3,6 +3,7 @@ package files.WayElements;
 import java.util.List;
 
 import files.Events.PassMotion;
+import files.GameDrawer;
 import files.Player;
 import files.PlayerController;
 import javafx.scene.layout.Pane;
@@ -62,6 +63,7 @@ public class Way {
 
         System.out.println("Ходил: " + player);
         System.out.println("Следующим ходит: " + next);
+        GameDrawer.getInstance().draw();
     }
 
     public void doBackSteps(int steps){
