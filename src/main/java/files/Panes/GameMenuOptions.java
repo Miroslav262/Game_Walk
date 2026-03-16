@@ -1,6 +1,7 @@
 package files.Panes;
 
 import files.GameDrawer;
+import files.GameInitializer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -11,21 +12,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
-public class MainMenuOptions extends StackPane {
-    private static MainMenuOptions instance;
+public class GameMenuOptions extends StackPane {
+    private static GameMenuOptions instance = new GameMenuOptions();
     private static boolean isVisible = false;
 
     private final VBox modalPane;
 
-    private final Pane gameRoot;
-
-    public static void initMainMenuOptions(Pane gameRoot){
-        instance = new MainMenuOptions(gameRoot);
-    }
-
-    private MainMenuOptions(Pane gameRoot){
-        this.gameRoot = gameRoot;
-
+    private GameMenuOptions(){
         modalPane = new VBox();
         modalPane.setBackground(new Background(
                 new BackgroundFill(Color.web("#008A00"), new CornerRadii(10), Insets.EMPTY)
@@ -60,7 +53,7 @@ public class MainMenuOptions extends StackPane {
         });
         restartBut.setPrefWidth(Screen.getPrimary().getVisualBounds().getHeight()*0.3);
 
-        StyledButton exitBut = new StyledButton("Выйти в главоное меню", 20, new EventHandler<ActionEvent>() {
+        StyledButton exitBut = new StyledButton("Выйти в главное меню", 20, new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 /* заглушка */
@@ -73,7 +66,7 @@ public class MainMenuOptions extends StackPane {
         this.setVisible(false);
     }
 
-    public static MainMenuOptions getInstance() {
+    public static GameMenuOptions getInstance() {
         return instance;
     }
 

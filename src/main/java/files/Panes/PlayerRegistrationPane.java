@@ -1,7 +1,6 @@
 package files.Panes;
 
 import files.Game;
-import files.GameInitializer;
 import files.Panes.PlayerRegPaneComponents.PlayerInputComponent;
 import files.Player;
 import files.PlayerController;
@@ -20,20 +19,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerRegistrationPane extends StackPane {
-    private static PlayerRegistrationPane instance;
+    private static PlayerRegistrationPane instance = new PlayerRegistrationPane();
     private static boolean isVisible = false;
 
-    public static PlayerRegistrationPane getInstance(){
+    public static PlayerRegistrationPane getInstance() {
         return instance;
     }
 
-    public PlayerRegistrationPane(){
+    private PlayerRegistrationPane() {
+        this.setBackground(new Background(
+                new BackgroundFill(Color.web("#008A00"), new CornerRadii(0), Insets.EMPTY)
+        ));
+        this.setAlignment(Pos.CENTER);
+
         VBox vBox = new VBox();
         vBox.setSpacing(20);
+        vBox.setFillWidth(false);
 
         Label label = new Label("Главное меню");
-        label.setFont(Font.font("Comic Sans MS", 30));
-
+        label.setFont(Font.font("Comic Sans MS", 17));
         vBox.getChildren().add(label);
         vBox.setAlignment(Pos.CENTER);
 
@@ -43,69 +47,76 @@ public class PlayerRegistrationPane extends StackPane {
         ));
         vBox1.setAlignment(Pos.CENTER);
         vBox1.setSpacing(10);
+        vBox1.setPadding(new Insets(10));
 
-        StyledButton addPlayerBut = new StyledButton("Добавить игрока", 35, new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                vBox1.getChildren().add(vBox1.getChildren().size()-1, new PlayerInputComponent());
-            }
+        StyledButton addPlayerBut = new StyledButton("Добавить игрока", 17, e -> {
+            vBox1.getChildren().add(vBox1.getChildren().size() - 1, new PlayerInputComponent());
         });
 
-        vBox1.getChildren().addAll(new PlayerInputComponent(), new PlayerInputComponent(), new PlayerInputComponent(), addPlayerBut);
+        vBox1.getChildren().addAll(
+                new PlayerInputComponent(),
+                new PlayerInputComponent(),
+                new PlayerInputComponent(),
+                addPlayerBut
+        );
 
+        vBox.setPadding(new Insets(10));
         vBox.getChildren().add(vBox1);
 
-        StyledButton submitBut = new StyledButton("Продолжить", 35, new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                List<Node> resultNodes = vBox1.getChildren();
-                if(resultNodes.size()<=3){
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Слишком мало участников");
-                    alert.show();
+        StyledButton submitBut = new StyledButton("Продолжить", 17, e -> {
+
+            List<PlayerInputComponent> inputs = new ArrayList<>();
+
+            for (Node node : vBox1.getChildren()) {
+                if (node instanceof PlayerInputComponent pic) {
+                    inputs.add(pic);
+                }
+            }
+
+            if (inputs.size() < 2) {
+                new Alert(Alert.AlertType.ERROR, "Слишком мало участников").show();
+                return;
+            }
+
+            for (PlayerInputComponent current : inputs) {
+                if (current.getColor() == null ||
+                        current.getPlayerName() == null ||
+                        current.getPlayerName().isEmpty()) {
+
+                    new Alert(Alert.AlertType.ERROR, "Заполните пустые поля").show();
                     return;
                 }
-                for(int i = 0 ;i<resultNodes.size()-1; i++){
-                    PlayerInputComponent current = (PlayerInputComponent)(resultNodes.get(i));
-                    if(current.getColor() == null || current.getPlayerName() == null || current.getPlayerName().isEmpty()){
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Заполните пустые поля");
-                        alert.show();
-                        return;
-                    }
-                }
-
-                resultNodes.removeLast();
-                List<Player> result = new ArrayList<>();
-                for(Node node : resultNodes){
-                    PlayerInputComponent playerInputComponent = (PlayerInputComponent)node;
-                    result.add(new Player(playerInputComponent.getPlayerName(), playerInputComponent.getColor()));
-                }
-                
-                PlayerController.createInstance(result);
-
-                Game.createNewGame(GameInitializer.getGameRoot());
-                Game.show();
-                hide();
             }
+
+            List<Player> result = new ArrayList<>();
+            for (PlayerInputComponent pic : inputs) {
+                result.add(new Player(pic.getPlayerName(), pic.getColor()));
+            }
+
+            PlayerController.createInstance(result);
+
+            Game.createNewGame();
+            Game.show();
+            hide();
         });
 
         vBox.getChildren().add(submitBut);
         this.getChildren().add(vBox);
     }
 
-
-    public static void setVisibleState(boolean state){
+    public static void setVisibleState(boolean state) {
         isVisible = state;
         instance.setVisible(isVisible);
         instance.toFront();
     }
-    public static void show(){
+
+    public static void show() {
         BlockerPane.setVisibleState(true);
         instance.setVisible(true);
         instance.toFront();
-
     }
 
-    public void hide(){
+    public void hide() {
         instance.setVisible(false);
     }
 }

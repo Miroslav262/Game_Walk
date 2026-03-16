@@ -17,11 +17,11 @@ public class PlayerController {
         this.current = 0;
     }
 
-    public static PlayerController createInstance(List<Player> players) {
-        if (instance == null) {
-            instance = new PlayerController(players);
-        }
-        return instance;
+    public static void createInstance(){
+        instance = new PlayerController(new ArrayList<>());
+    }
+    public static void createInstance(List<Player> players){
+        instance = new PlayerController(players);
     }
 
     public static PlayerController getInstance() {

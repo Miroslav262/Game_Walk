@@ -3,6 +3,12 @@ package files;
 import java.util.Random;
 
 public class Dice {
+    private static Dice instance = new Dice();
+
+    public static Dice getInstance(){
+        return instance;
+    }
+
     private Random random;
 
     public Dice(){

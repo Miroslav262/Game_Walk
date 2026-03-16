@@ -14,64 +14,50 @@ import javafx.scene.text.Font;
 
 
 public class PlayerInputComponent extends HBox {
-    private String playerName;
-    private Color color;
+    private final TextField textField;
+    private final ColorPicker colorPicker;
 
-    public PlayerInputComponent(){
+    public PlayerInputComponent() {
         this.setBackground(new Background(
                 new BackgroundFill(Color.web("#008A00"), new CornerRadii(5), Insets.EMPTY)
         ));
         this.setSpacing(10);
         this.setPadding(new Insets(10));
 
-        TextField textField = new TextField();
-        textField.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                playerName = textField.getText();
-            }
-        });
-
+        textField = new TextField();
         textField.setPromptText("Введите имя игрока...");
         textField.setFont(Font.font("Comic Sans MS", 20));
-
         this.getChildren().add(textField);
 
-        ColorPicker colorPicker = new ColorPicker();
-        colorPicker.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                color = colorPicker.getValue();
-            }
-        });
-
+        colorPicker = new ColorPicker();
         this.getChildren().add(colorPicker);
 
         Button delButton = new Button();
-
         delButton.setPadding(new Insets(3));
-        delButton.setBackground(new Background(new BackgroundFill(Color.ALICEBLUE, new CornerRadii(4), new Insets(0))));
-        delButton.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(1), new Insets(0))));
+        delButton.setBackground(new Background(
+                new BackgroundFill(Color.ALICEBLUE, new CornerRadii(4), Insets.EMPTY)
+        ));
+        delButton.setBorder(new Border(new BorderStroke(
+                Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(1), new Insets(0)
+        )));
 
-        javafx.scene.image.Image delButImage = new Image("/images/Trash_Can.png");
+        Image delButImage = new Image("/images/Trash_Can.png");
         ImageView view = new ImageView(delButImage);
-
         view.setPreserveRatio(true);
         view.setFitHeight(24);
-
         delButton.setGraphic(view);
-        delButton.setOnAction(e -> {
-            ((Pane) getParent()).getChildren().remove(this);
-        });
+
+        delButton.setOnAction(e -> ((Pane) getParent()).getChildren().remove(this));
 
         this.getChildren().add(delButton);
     }
 
     public String getPlayerName() {
-        return playerName;
+        return textField.getText();
     }
 
     public Color getColor() {
-        return color;
+        return colorPicker.getValue();
     }
 }
+

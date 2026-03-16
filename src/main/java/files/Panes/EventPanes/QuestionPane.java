@@ -136,10 +136,10 @@ public class QuestionPane extends StackPane {
     }
 
 
-    public void show(Player player) {
-        this.questionPlayer = player;
+    public void show() {
+        this.questionPlayer = PlayerController.getInstance().getCurrentPlayer();
         this.loadNewQuestion();
-        this.label.setText("Игрок " + player.getName() + " отвечает на вопрос");
+        this.label.setText("Игрок " + questionPlayer.getName() + " отвечает на вопрос");
         BlockerPane.setVisibleState(true);
         this.setVisible(true);
         this.toFront();

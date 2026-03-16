@@ -15,7 +15,7 @@ import javafx.stage.Screen;
 
 public class MainMenuPane extends StackPane {
     private static MainMenuPane instance = new MainMenuPane();
-    private static boolean isVisible = false;
+    private static boolean isVisible = true;
 
     public static MainMenuPane getInstance(){
         return instance;
@@ -27,19 +27,19 @@ public class MainMenuPane extends StackPane {
                 Screen.getPrimary().getBounds().getHeight()
         );
 
-        Screen.getPrimary().getBounds().getWidth();
+
         this.setBackground(new Background(
-                new BackgroundFill(Color.web("#008A00"), new CornerRadii(5), Insets.EMPTY)
+                new BackgroundFill(Color.web("#008A00"), new CornerRadii(0), Insets.EMPTY)
         ));
 
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER);
-        hBox.setSpacing(20);
-        this.getChildren().add(hBox);
+        VBox vBox = new VBox();
+        vBox.setAlignment(Pos.CENTER);
+        vBox.setSpacing(20);
+        this.getChildren().add(vBox);
 
         Label label = new Label("Главное меню");
         label.setFont(Font.font("Comic Sans MS", 35));
-        hBox.getChildren().add(label);
+        vBox.getChildren().add(label);
 
         StyledButton newGameBut = new StyledButton("Новая игра", 30, new EventHandler<ActionEvent>() {
             @Override
@@ -48,6 +48,7 @@ public class MainMenuPane extends StackPane {
                 MainMenuPane.getInstance().hide();
             }
         });
+        newGameBut.setPrefWidth(Screen.getPrimary().getBounds().getWidth()*0.35);
 
         StyledButton changeDBBut = new StyledButton("Редактировать базу вопросов", 30, new EventHandler<ActionEvent>() {
             @Override
@@ -55,6 +56,7 @@ public class MainMenuPane extends StackPane {
                 /* заглушка */
             }
         });
+        changeDBBut.setPrefWidth(Screen.getPrimary().getBounds().getWidth()*0.35);
 
         StyledButton exitBut = new StyledButton("Выход", 30, new EventHandler<ActionEvent>() {
             @Override
@@ -62,6 +64,9 @@ public class MainMenuPane extends StackPane {
                 Platform.exit();
             }
         });
+        exitBut.setPrefWidth(Screen.getPrimary().getBounds().getWidth()*0.35);
+
+        vBox.getChildren().addAll(newGameBut, changeDBBut,exitBut);
     }
 
     public static void setVisibleState(boolean state){
