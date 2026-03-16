@@ -15,6 +15,7 @@ import javafx.scene.canvas.*;
 
 import javafx.scene.control.Button;
 
+import javafx.scene.control.ColorPicker;
 import javafx.scene.image.Image;
 
 import javafx.scene.layout.*;
@@ -29,6 +30,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
+
 
 
         StackPane sMain = new StackPane();
@@ -64,7 +66,16 @@ public class Main extends Application {
                         true
                 )
         );
+        /*
+        ColorPicker colorPicker = new ColorPicker();
 
+        colorPicker.setOnAction(e -> {
+            Color color = colorPicker.getValue();
+            System.out.println("Выбран цвет: " + color);
+        });
+
+        sMain.getChildren().add(colorPicker);
+*/
         hbox.setBackground(new Background(bgImage));
 
         hbox.addEventHandler(FinishEvent.TYPE, e -> {
@@ -125,8 +136,13 @@ public class Main extends Application {
         sMain.getChildren().add(SkipAnotherPlayerTurnPane.getInstance());
         sMain.getChildren().add(QuestionPane.getInstance(hbox));
 
+      //  sMain.getChildren().add(Game.getInstance());
+      //  sMain.getChildren().add(PlayerRegistrationPane.getInstance());
+       // sMain.getChildren().add(MainMenuPane.getInstance());
+
         MainMenuOptions.initMainMenuOptions(hbox);
         sMain.getChildren().add(MainMenuOptions.getInstance());
+
 
         Way.createNewWay(hbox);
 
