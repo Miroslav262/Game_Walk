@@ -1,5 +1,7 @@
 package files.Panes;
 
+import files.Game;
+import files.GameInitializer;
 import files.Panes.PlayerRegPaneComponents.PlayerInputComponent;
 import files.Player;
 import files.PlayerController;
@@ -9,7 +11,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -81,7 +82,7 @@ public class PlayerRegistrationPane extends StackPane {
                 
                 PlayerController.createInstance(result);
 
-                Game.createNewGame();
+                Game.createNewGame(GameInitializer.getGameRoot());
                 Game.show();
                 hide();
             }

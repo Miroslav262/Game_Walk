@@ -66,6 +66,7 @@ public class Main extends Application {
                         true
                 )
         );
+        QuestionPane.createInstance(sMain);
         /*
         ColorPicker colorPicker = new ColorPicker();
 
@@ -78,13 +79,13 @@ public class Main extends Application {
 */
         hbox.setBackground(new Background(bgImage));
 
-        hbox.addEventHandler(FinishEvent.TYPE, e -> {
+        sMain.addEventHandler(FinishEvent.TYPE, e -> {
             FinishPane.show(e.getPlayer());
         });
-        hbox.addEventHandler(SkipTurnEvent.TYPE, e -> {
+        sMain.addEventHandler(SkipTurnEvent.TYPE, e -> {
             SkipTurnPane.show(e.getPlayer());
         });
-        hbox.addEventHandler(StepEvent.TYPE, e -> {
+        sMain.addEventHandler(StepEvent.TYPE, e -> {
             Player player = e.getPlayer();
             int steps = e.getSteps();
 
@@ -103,27 +104,24 @@ public class Main extends Application {
             e.consume();
         });
 
-        hbox.addEventHandler(TotalSwapEvent.TYPE, e -> {
+        sMain.addEventHandler(TotalSwapEvent.TYPE, e -> {
             TotalSwapPane.show();
         });
 
-        hbox.addEventHandler(SkipAnotherPlayerTurnEvent.TYPE, e -> {
+        sMain.addEventHandler(SkipAnotherPlayerTurnEvent.TYPE, e -> {
             SkipAnotherPlayerTurnPane.show();
 
         });
 
-        hbox.addEventHandler(QuestionEvent.TYPE, e -> {
-            hbox.addEventHandler(QuestionEvent.TYPE, event -> {
-                Player player = PlayerController.getInstance().getCurrentPlayer();
+        sMain.addEventHandler(QuestionEvent.TYPE, e -> {
+            Player player = PlayerController.getInstance().getCurrentPlayer();
 
-                QuestionPane.getInstance(hbox).show(player);
+            QuestionPane.getInstance().show(player);
+            BlockerPane.setVisibleState(true);
 
-                BlockerPane.setVisibleState(true);
-
-                event.consume();
-            });
-
+            e.consume();
         });
+
 
 
 
@@ -134,7 +132,7 @@ public class Main extends Application {
         sMain.getChildren().add(StepPane.getInstance());
         sMain.getChildren().add(TotalSwapPane.getInstance());
         sMain.getChildren().add(SkipAnotherPlayerTurnPane.getInstance());
-        sMain.getChildren().add(QuestionPane.getInstance(hbox));
+        sMain.getChildren().add(QuestionPane.getInstance());
 
       //  sMain.getChildren().add(Game.getInstance());
       //  sMain.getChildren().add(PlayerRegistrationPane.getInstance());
@@ -153,24 +151,8 @@ public class Main extends Application {
         hbox.getChildren().add(GameDrawer.getInstance().getGraphicsContext2D().getCanvas());
 
         Dice dice = new Dice();
-/*
-        Button nextMove = new Button("Следующий ход");
-        nextMove.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                int roll = dice.roll();
-                System.out.println(roll);
-                Way.getInstance().doStep(roll);
-            }
-        });
-        */
 
-        /*
-        VBox vBox = new VBox(nextMove);
 
-        hbox.getChildren().add(vBox);
-
-*/
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         hbox.getChildren().add(spacer);

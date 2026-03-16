@@ -1,16 +1,21 @@
-package files.Panes;
+package files;
 
+import files.Panes.BlockerPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 public class Game extends StackPane {
     private static Game instance;
     private static boolean isVisible = false;
 
+    private Pane gameRoot;
+
     public static Game getInstance(){
         return instance;
     }
 
-    public static void createNewGame(){
+    public static void createNewGame(Pane gameRoot){
+        this.gameRoot = gameRoot;
 
     }
 

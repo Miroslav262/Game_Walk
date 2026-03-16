@@ -17,7 +17,7 @@ import javafx.stage.Screen;
 
 public class QuestionPane extends StackPane {
 
-    private static QuestionPane instance;
+    private static QuestionPane instance = null;
 
     private final VBox modalPane;
     private final Label label;
@@ -110,11 +110,15 @@ public class QuestionPane extends StackPane {
         this.setVisible(false);
     }
 
-    public static QuestionPane getInstance(Pane gameRoot) {
-        if (instance == null) {
-            instance = new QuestionPane(gameRoot);
-            gameRoot.getChildren().add(instance);
-        }
+    public static void createInstance(Pane gameRoot){
+        instance = new QuestionPane(gameRoot);
+    }
+
+    public void updateInstance(){
+        gameRoot.getChildren().set(gameRoot.getChildren().indexOf(instance), new QuestionPane(gameRoot));
+    }
+
+    public static QuestionPane getInstance(){
         return instance;
     }
 
@@ -132,18 +136,17 @@ public class QuestionPane extends StackPane {
     }
 
 
-    public static void show(Player player) {
-        instance.questionPlayer = player;
-        instance.loadNewQuestion();
-        instance.label.setText("Игрок " + player.getName() + " отвечает на вопрос");
+    public void show(Player player) {
+        this.questionPlayer = player;
+        this.loadNewQuestion();
+        this.label.setText("Игрок " + player.getName() + " отвечает на вопрос");
         BlockerPane.setVisibleState(true);
-        instance.setVisible(true);
-        instance.toFront();
+        this.setVisible(true);
+        this.toFront();
     }
 
-    public static void hide() {
-        if (instance != null) {
-            instance.setVisible(false);
-        }
+    public void hide() {
+        this.setVisible(false);
     }
+
 }
