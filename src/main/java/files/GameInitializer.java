@@ -1,11 +1,8 @@
 package files;
 
 import files.Events.*;
-import files.Panes.BlockerPane;
+import files.Panes.*;
 import files.Panes.EventPanes.*;
-import files.Panes.GameMenuOptions;
-import files.Panes.MainMenuPane;
-import files.Panes.PlayerRegistrationPane;
 import files.WayElements.Way;
 import javafx.scene.layout.StackPane;
 
@@ -83,6 +80,9 @@ public class GameInitializer extends StackPane {
         this.getChildren().add(MainMenuPane.getInstance());
         this.getChildren().add(GameMenuOptions.getInstance());
 
+        this.getChildren().add(DBWorker.getInstance());
         this.getChildren().add(BlockerPane.getInstance());
+
+
     }
 }

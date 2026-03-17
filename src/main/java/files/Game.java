@@ -50,9 +50,6 @@ public class Game extends StackPane {
 
         Way.createNewWay(hbox);
 
-        GameDrawer.getInstance().getGraphicsContext2D().getCanvas().widthProperty().bind(Main.getPrimaryStage().heightProperty());
-        GameDrawer.getInstance().getGraphicsContext2D().getCanvas().heightProperty().bind(Main.getPrimaryStage().heightProperty());
-
         hbox.getChildren().add(GameDrawer.getInstance().getGraphicsContext2D().getCanvas());
 
         Region spacer = new Region();

@@ -1,4 +1,4 @@
-package main.java.DB;
+package files.DB;
 
 import files.Question;
 import java.sql.*;

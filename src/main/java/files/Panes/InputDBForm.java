@@ -1,21 +1,21 @@
 package files.Panes;
 
+import files.DB.DBController;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import main.java.DB.DBController;
+
 import files.Question;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class InputDBForm extends Pane {
+
     private DBController dbController;
     private String textQuestion;
     private TextArea inputQuestion;
@@ -23,191 +23,154 @@ public class InputDBForm extends Pane {
     private VBox main;
     private int complexity;
 
-    public InputDBForm(DBController dbController){
+    public InputDBForm(DBController dbController) {
         this.dbController = dbController;
 
         textQuestion = null;
         complexity = -1;
 
         VBox sMain = new VBox();
-        sMain.setBackground(new Background(new BackgroundFill(new Color(20.0/255, 51.0/255, 6.0/255, 1),  new CornerRadii(5), new Insets(0))));
+        sMain.setBackground(new Background(
+                new BackgroundFill(Color.rgb(20, 51, 6), new CornerRadii(5), Insets.EMPTY)
+        ));
         sMain.setSpacing(5);
         sMain.setPadding(new Insets(10));
 
         main = new VBox();
+        main.setBackground(new Background(
+                new BackgroundFill(Color.DARKGREEN, new CornerRadii(5), Insets.EMPTY)
+        ));
 
-
-        main.setBackground(new Background(new BackgroundFill(Color.DARKGREEN,  new CornerRadii(5), new Insets(0))));
         Label nameLabel = new Label("Добавление нового вопроса");
         nameLabel.setFont(new Font(15));
         nameLabel.setTextFill(Color.GREEN);
         nameLabel.setAlignment(Pos.CENTER);
 
-
         sMain.getChildren().add(new StackPane(nameLabel));
 
         inputQuestion = new TextArea();
         inputQuestion.setPromptText("Введите вопрос...");
-
-
         inputQuestion.setPrefWidth(300);
         inputQuestion.setPrefHeight(100);
         inputQuestion.setWrapText(true);
 
+        inputQuestion.textProperty().addListener((obs, oldVal, newVal) -> {
+            this.textQuestion = newVal;
+        });
+
         comboBox = new ComboBox<>();
         comboBox.getItems().addAll("простой", "средний", "сложный");
-
         comboBox.setPromptText("Выберите сложность");
 
         comboBox.setOnAction(e -> {
             String selected = comboBox.getValue();
-            if(selected != null){
-                switch (selected){
-                    case "простой":
-                        complexity = 3;
-                        break;
-                    case "средний":
-                        complexity = 2;
-                        break;
-                    case "сложный":
-                        complexity = 1;
-                        break;
-                    default:
-                        complexity = -1;
+            if (selected != null) {
+                switch (selected) {
+                    case "простой" -> complexity = 3;
+                    case "средний" -> complexity = 2;
+                    case "сложный" -> complexity = 1;
+                    default -> complexity = -1;
                 }
-                System.out.println("Вы выбрали: " + selected);
             }
-
         });
 
-
-
-        inputQuestion.textProperty().addListener((obs, oldVal, newVal) -> {
-            this.textQuestion = newVal;
-            System.out.println(textQuestion);
-        });
-
-        HBox inputQBar = new HBox();
-        inputQBar.setSpacing(7);
+        HBox inputQBar = new HBox(7);
         inputQBar.setPadding(new Insets(10));
-        inputQBar.getChildren().add(inputQuestion);
-        inputQBar.getChildren().add(comboBox);
+        inputQBar.getChildren().addAll(inputQuestion, comboBox);
 
         main.getChildren().add(inputQBar);
 
+        // Добавляем 3 варианта по умолчанию
         for (int i = 0; i < 3; i++) {
-            QuestionOptionPane qp = new QuestionOptionPane();
-            main.getChildren().add(qp);
+            main.getChildren().add(new QuestionOptionPane());
         }
 
-
-
         Button newOption = new Button("Создать новый вариант");
-        newOption.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                main.getChildren().add(main.getChildren().size()-1,new QuestionOptionPane());
-                System.out.println("Создан вариант");
-            }
+        newOption.setOnAction(e -> {
+            main.getChildren().add(main.getChildren().size() - 1, new QuestionOptionPane());
         });
+
         main.getChildren().add(new StackPane(newOption));
 
         main.setPadding(new Insets(5));
         main.setSpacing(5);
 
         Button submitBtn = new Button("Сохранить данные");
-        submitBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Question q;
-                try {
-                    q = getQuestion();
-                    System.out.println(q);
-
-                    dbController.addQuestion(q);
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Данные успешно добавлены");
-                    alert.showAndWait();
-                }
-                catch (Exception e) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-                    alert.showAndWait();
-
-                }
-
-
-
+        submitBtn.setOnAction(e -> {
+            try {
+                Question q = getQuestion();
+                dbController.addQuestion(q);
+                new Alert(Alert.AlertType.INFORMATION, "Данные успешно добавлены").showAndWait();
+            } catch (Exception ex) {
+                new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
             }
         });
 
         Button clearBtn = new Button("Очистить форму");
-        clearBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-               clear();
-            }
-        });
+        clearBtn.setOnAction(e -> clear());
 
-        sMain.getChildren().add(new StackPane(main));
-
-        HBox buttonsBar = new HBox();
+        HBox buttonsBar = new HBox(20);
         buttonsBar.setAlignment(Pos.CENTER);
-        buttonsBar.setSpacing(20);
+        buttonsBar.getChildren().addAll(
+                new StackPane(submitBtn),
+                new StackPane(clearBtn)
+        );
 
-        buttonsBar.getChildren().add(new StackPane(submitBtn));
-        buttonsBar.getChildren().add(new StackPane(clearBtn));
-
-        sMain.getChildren().add(buttonsBar);
+        sMain.getChildren().addAll(new StackPane(main), buttonsBar);
 
         getChildren().add(sMain);
     }
 
-    public String getTextQuestion() {
-        return textQuestion;
-    }
-
-    private void clear(){
-        inputQuestion.textProperty().set("");
-        for(int i = 0; i<main.getChildren().size();i++){
-            if(main.getChildren().get(i) instanceof QuestionOptionPane){
-                ((QuestionOptionPane)(main.getChildren().get(i))).clear();
-            }
-        }
+    private void clear() {
+        inputQuestion.setText("");
         comboBox.setValue(null);
 
+        for (var node : main.getChildren()) {
+            if (node instanceof QuestionOptionPane qp) {
+                qp.clear();
+            }
+        }
     }
 
-    private Question getQuestion(){
+    private Question getQuestion() {
         List<String> answers = new ArrayList<>();
         int correctID = -1;
-        for(int i = 0; i<main.getChildren().size();i++){
-            if(main.getChildren().get(i) instanceof QuestionOptionPane){
-                String optionText =((QuestionOptionPane)(main.getChildren().get(i))).getOptionText();
-                if(optionText != null){
-                    answers.add(optionText);
-                }
-                else{
+
+        int optionIndex = 0;
+
+        for (var node : main.getChildren()) {
+            if (node instanceof QuestionOptionPane qp) {
+
+                String optionText = qp.getOptionText();
+                if (optionText == null || optionText.isEmpty()) {
                     throw new RuntimeException("Не все поля заполнены!");
                 }
 
-                if(((QuestionOptionPane)(main.getChildren().get(i))).isCorrect()){
-                    if(correctID != -1){
-                        throw new RuntimeException("Только 1 вариант ответа правильный!");
+                answers.add(optionText);
+
+                if (qp.isCorrect()) {
+                    if (correctID != -1) {
+                        throw new RuntimeException("Только 1 вариант ответа должен быть правильным!");
                     }
-                    else{
-                        correctID = i;
-                    }
+                    correctID = optionIndex;
                 }
+
+                optionIndex++;
             }
         }
-        if(correctID == -1){
-            throw new RuntimeException("Должен быть выбран 1 правильный вариант ответа!");
+
+        if (correctID == -1) {
+            throw new RuntimeException("Выберите правильный вариант ответа!");
         }
-        if(complexity == -1){
+
+        if (complexity == -1) {
             throw new RuntimeException("Выберите сложность вопроса!");
         }
-        if(answers.size() <2){
+
+        if (answers.size() < 2) {
             throw new RuntimeException("Должно быть не менее двух вариантов ответов!");
         }
-        return new Question(this.textQuestion, answers, correctID, complexity);
+
+        return new Question(textQuestion, answers, correctID, complexity);
     }
 }

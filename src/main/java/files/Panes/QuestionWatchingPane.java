@@ -63,7 +63,7 @@ public class QuestionWatchingPane extends Pane {
             rb.setMouseTransparent(true);
             rb.setFocusTraversable(false);
 
-            if(question.getCorrectID() - 1 == i){
+            if(question.getCorrectID() == i){
                 rb.setSelected(true);
             }
             else{

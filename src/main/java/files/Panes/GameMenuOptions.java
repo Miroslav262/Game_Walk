@@ -2,6 +2,7 @@ package files.Panes;
 
 import files.GameDrawer;
 import files.GameInitializer;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -44,24 +45,15 @@ public class GameMenuOptions extends StackPane {
         });
         continueBut.setPrefWidth(Screen.getPrimary().getVisualBounds().getHeight()*0.3);
 
-
-        StyledButton restartBut = new StyledButton("Перезапустить игру", 20, new EventHandler<ActionEvent>() {
+        StyledButton exitBut = new StyledButton("Выйти из игры", 20, new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                /* заглушка */
-            }
-        });
-        restartBut.setPrefWidth(Screen.getPrimary().getVisualBounds().getHeight()*0.3);
-
-        StyledButton exitBut = new StyledButton("Выйти в главное меню", 20, new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                /* заглушка */
+                Platform.exit();
             }
         });
         exitBut.setPrefWidth(Screen.getPrimary().getVisualBounds().getHeight()*0.3);
 
-        modalPane.getChildren().addAll(continueBut, restartBut, exitBut);
+        modalPane.getChildren().addAll(continueBut, exitBut);
         this.getChildren().add(modalPane);
         this.setVisible(false);
     }

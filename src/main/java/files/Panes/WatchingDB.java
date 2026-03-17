@@ -1,5 +1,6 @@
 package files.Panes;
 
+import files.DB.DBController;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -7,7 +8,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 
 import javafx.scene.paint.Color;
-import main.java.DB.DBController;
 import files.Question;
 
 import java.util.List;

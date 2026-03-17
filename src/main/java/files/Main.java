@@ -1,24 +1,16 @@
 package files;
 
+import files.DB.DBController;
 import files.Panes.*;
-import files.WayElements.Way;
+
 import javafx.application.Application;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 
-import javafx.scene.image.Image;
-
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-
-import java.util.Arrays;
 
 public class Main extends Application {
 
@@ -38,15 +30,8 @@ public class Main extends Application {
         stage.setMaximized(true);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
-/*
-        PlayerController.createInstance(Arrays.asList(new Player[]{
-                new Player("Вася", Color.AQUA),
-                new Player("Петя", Color.RED),
-                new Player("Гриша", Color.BEIGE)
-        }));
-*/
 
-
+        System.out.println(DBController.getInstance().getAllQuestions());
 
     }
 }

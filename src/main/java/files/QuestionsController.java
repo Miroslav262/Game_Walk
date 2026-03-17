@@ -1,6 +1,7 @@
 package files;
 
-import main.java.DB.DBController;
+
+import files.DB.DBController;
 
 import java.util.Collections;
 import java.util.List;

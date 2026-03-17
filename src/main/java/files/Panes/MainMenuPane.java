@@ -53,7 +53,8 @@ public class MainMenuPane extends StackPane {
         StyledButton changeDBBut = new StyledButton("Редактировать базу вопросов", 30, new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                /* заглушка */
+                DBWorker.show();
+                MainMenuPane.hide();
             }
         });
         changeDBBut.setPrefWidth(Screen.getPrimary().getBounds().getWidth()*0.35);
@@ -81,7 +82,7 @@ public class MainMenuPane extends StackPane {
 
     }
 
-    public void hide(){
+    public static void hide(){
         instance.setVisible(false);
     }
 }

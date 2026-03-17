@@ -4,6 +4,7 @@ import files.GameDrawer;
 import files.Panes.BlockerPane;
 import files.Player;
 import files.Utils;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -39,7 +40,7 @@ public class FinishPane extends StackPane {
         imageView.setPreserveRatio(true);
         imageView.setFitHeight(Screen.getPrimary().getVisualBounds().getHeight()*0.25);
 
-        Button button = new Button("Продолжить");
+        Button button = new Button("Выйти из игры");
         button.setBackground(new Background(new BackgroundFill(Color.web("#2CA90B"), new CornerRadii(5), new Insets(0))));
         button.setFont(Font.font("Comic Sans MS", 20));
         button.setBorder(new Border(new BorderStroke(
@@ -51,9 +52,7 @@ public class FinishPane extends StackPane {
 
 
         button.setOnAction(e -> {
-            hide();
-            BlockerPane.setVisibleState(false);
-            GameDrawer.getInstance().draw();
+            Platform.exit();
         });
 
         modalPane.getChildren().addAll(label,imageView,button);
