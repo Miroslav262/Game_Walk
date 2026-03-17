@@ -1,13 +1,17 @@
 package files;
 
+import files.Animations.RollDiceAnimationPane;
 import files.Panes.*;
 import files.WayElements.Way;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+
 
 public class Game extends StackPane {
     private static Game instance;
@@ -18,7 +22,9 @@ public class Game extends StackPane {
         return instance;
     }
 
-    public static void createNewGame(){
+    private Game(){
+        this.setVisible(false);
+
         HBox hbox = new HBox();
 
 
@@ -40,16 +46,7 @@ public class Game extends StackPane {
 
         hbox.setBackground(new Background(bgImage));
 
-
-
-
-
-
-        GameInitializer.getGameRoot().getChildren().add(hbox);
-
-
-
-
+        getChildren().add(hbox);
 
         Way.createNewWay(hbox);
 
@@ -64,7 +61,7 @@ public class Game extends StackPane {
 
 
         VBox vBox = new VBox();
-        vBox.setAlignment(Pos.TOP_RIGHT);
+        vBox.setAlignment(Pos.TOP_CENTER);
         vBox.setPadding(new Insets(10));
         vBox.setSpacing(20);
 
@@ -75,22 +72,35 @@ public class Game extends StackPane {
             @Override
             public void handle(ActionEvent actionEvent) {
                 GameMenuOptions.show();
+                BlockerPane.setVisibleState(false);
             }
         }));
         boxForSettingsBut.setAlignment(Pos.CENTER_RIGHT);
 
 
+        vBox.getChildren().addAll(
+                boxForSettingsBut,
+                new PlayerInfo(),
+                new StyledButton("Бросить кубик", 20, e -> {
+                    BlockerPane.setVisibleState(true);
+                    RollDiceAnimationPane.getInstance().play();
 
-        vBox.getChildren().addAll(boxForSettingsBut, new PlayerInfo(), new StyledButton("Бросить кубик", 20, new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                int roll = Dice.getInstance().roll();
-                System.out.println(roll);
-                Way.getInstance().doStep(roll);
-            }
-        }));
+                }),
+                WhoNowTurnLabel.getInstance()
+        );
+
+
 
         hbox.getChildren().add(vBox);
+
+        this.getChildren().add(RollDiceAnimationPane.getInstance());
+        RollDiceAnimationPane.getInstance().toFront();
+
+
+    }
+
+    public static void createNewGame(){
+        instance = new Game();
     }
 
 

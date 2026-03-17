@@ -31,9 +31,16 @@ public class PlayerController {
         return instance;
     }
 
-    public Player getNext() {
-        current = (current + 1 == players.size()) ? 0 : current + 1;
-        return players.get(current);
+    public void updateState(){
+        while((players.get(current).isPassMotion())){
+            players.get(current).continueMotion();
+            this.current = (current + 1 == players.size()) ? 0 : current + 1;
+        }
+    }
+
+
+    public void toNext() {
+        this.current = (current + 1 == players.size()) ? 0 : current + 1;
     }
 
     public Player getCurrentPlayer() {

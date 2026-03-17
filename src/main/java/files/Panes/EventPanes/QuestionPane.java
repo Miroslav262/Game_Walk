@@ -8,6 +8,7 @@ import files.WayElements.Way;
 import files.WayElements.WayElement;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -55,6 +56,14 @@ public class QuestionPane extends StackPane {
         )));
 
         button.setOnAction(e -> {
+            var selected = questionView.getToggleGroup().getSelectedToggle();
+
+            if (selected == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Выберите вариант ответа");
+                alert.show();
+                return;
+            }
+
             if (!isChecked) {
 
                 isChecked = true;
@@ -64,13 +73,17 @@ public class QuestionPane extends StackPane {
                     questionView.getOptionRBList().get(i)
                             .setNewState(question.getCorrectID() == i + 1);
                 }
-                if(questionView.getToggleGroup().getSelectedToggle().equals(
-                        questionView.getOptionRBList().get(question.getCorrectID()-1).getRadioButton())){
+
+
+                boolean correct = selected ==
+                        questionView.getOptionRBList().get(question.getCorrectID() - 1).getRadioButton();
+
+                if (correct) {
                     label.setText("Игрок " + questionPlayer.getName() + " отвечает правильно");
-                }
-                else{
+                } else {
                     label.setText("Игрок " + questionPlayer.getName() + " отвечает неправильно");
                 }
+
             } else {
 
                 hide();

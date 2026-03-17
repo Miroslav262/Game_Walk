@@ -1,6 +1,7 @@
 package files.Panes;
 
 import files.Game;
+import files.GameInitializer;
 import files.Panes.PlayerRegPaneComponents.PlayerInputComponent;
 import files.Player;
 import files.PlayerController;
@@ -96,6 +97,7 @@ public class PlayerRegistrationPane extends StackPane {
             PlayerController.createInstance(result);
 
             Game.createNewGame();
+            GameInitializer.getGameRoot().getChildren().addFirst(Game.getInstance());
             Game.show();
             hide();
         });

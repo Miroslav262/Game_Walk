@@ -1,13 +1,27 @@
 package files.Panes;
 
+import files.GameInitializer;
+import files.Main;
+import files.Utils;
+import javafx.geometry.Insets;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 
 public class BlockerPane extends Pane {
-    private static BlockerPane instance= new BlockerPane();
+    private static final BlockerPane instance = new BlockerPane();
     private static boolean isVisible = false;
 
-    private BlockerPane(){
-        this.setStyle("-fx-background-color: rgba(0,0,0,0.25);");
+    private BlockerPane() {
+        this.setBackground(new Background(new BackgroundFill(Color.rgb(0,0,0, 0.25), new CornerRadii(0), new Insets(0))));
+
+        //this.setManaged(false);
+        this.prefWidthProperty().bind(Main.getPrimaryStage().widthProperty());
+        this.prefHeightProperty().bind(Main.getPrimaryStage().heightProperty());
+
         this.setVisible(isVisible);
         this.setPickOnBounds(isVisible);
     }
@@ -16,14 +30,12 @@ public class BlockerPane extends Pane {
         return instance;
     }
 
-    public static boolean isItVisible(){
-        return isVisible;
-    }
-
-    public static void setVisibleState(boolean state){
+    public static void setVisibleState(boolean state) {
         isVisible = state;
-        instance.setVisible(isVisible);
-        instance.setPickOnBounds(isVisible);
-    }
+        instance.setVisible(state);
+        instance.setPickOnBounds(state);
+        instance.toFront();
 
+    }
 }
+

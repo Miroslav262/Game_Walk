@@ -25,8 +25,15 @@ public class GameInitializer extends StackPane {
             FinishPane.show(e.getPlayer());
         });
         this.addEventHandler(SkipTurnEvent.TYPE, e -> {
-            SkipTurnPane.show(e.getPlayer());
+            Player player = e.getPlayer();
+
+            player.passMation();
+
+            SkipTurnPane.show(player);
+
+            e.consume();
         });
+
         this.addEventHandler(StepEvent.TYPE, e -> {
             Player player = e.getPlayer();
             int steps = e.getSteps();
@@ -64,16 +71,18 @@ public class GameInitializer extends StackPane {
 
 
 
-        this.getChildren().add(BlockerPane.getInstance());
+
         this.getChildren().add(SkipTurnPane.getInstance());
         this.getChildren().add(FinishPane.getInstance());
         this.getChildren().add(StepPane.getInstance());
         this.getChildren().add(TotalSwapPane.getInstance());
         this.getChildren().add(SkipAnotherPlayerTurnPane.getInstance());
         this.getChildren().add(QuestionPane.getInstance());
-        //this.getChildren().add(Game.getInstance());
+
         this.getChildren().add(PlayerRegistrationPane.getInstance());
         this.getChildren().add(MainMenuPane.getInstance());
         this.getChildren().add(GameMenuOptions.getInstance());
+
+        this.getChildren().add(BlockerPane.getInstance());
     }
 }

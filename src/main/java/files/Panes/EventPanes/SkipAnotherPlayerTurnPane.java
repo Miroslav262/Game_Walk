@@ -1,11 +1,8 @@
 package files.Panes.EventPanes;
 
+import files.*;
 import files.Events.SkipAnotherPlayerTurnEvent;
-import files.GameDrawer;
 import files.Panes.BlockerPane;
-import files.Player;
-import files.PlayerController;
-import files.Utils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -53,9 +50,6 @@ public class SkipAnotherPlayerTurnPane extends StackPane {
 
         ComboBox <String> comboBox = new ComboBox<>();
         comboBox.setPromptText("Выберите пропускающего ход");
-        for(Player player : PlayerController.getInstance().getPlayers()){
-            comboBox.getItems().add(player.getName());
-        }
 
         comboBox.setOnAction(e -> {
             String selected = comboBox.getValue();
@@ -80,6 +74,8 @@ public class SkipAnotherPlayerTurnPane extends StackPane {
                 SkipTurnPane.show(SkipAnotherPlayerTurnPane.getInstance().skippingPlayer);
 
                 GameDrawer.getInstance().draw();
+                PlayerController.getInstance().updateState();
+                WhoNowTurnLabel.updateLabel();
             }
 
         });
@@ -99,11 +95,28 @@ public class SkipAnotherPlayerTurnPane extends StackPane {
     }
 
     public static void show() {
-        instance.label.setText("Игрок " + PlayerController.getInstance().getCurrentPlayer().getName() + " выбирает, кто пропускает ход");
+        instance.label.setText(
+                "Игрок " + PlayerController.getInstance().getCurrentPlayer().getName() +
+                        " выбирает, кто пропускает ход"
+        );
+
+        instance.updatePlayersList();
+
         BlockerPane.setVisibleState(true);
         instance.setVisible(true);
         instance.toFront();
     }
+    private void updatePlayersList() {
+        ComboBox<String> comboBox = (ComboBox<String>) modalPane.getChildren().get(2);
+        comboBox.getItems().clear();
+
+        for (Player player : PlayerController.getInstance().getPlayers()) {
+            comboBox.getItems().add(player.getName());
+        }
+
+        skippingPlayer = null;
+    }
+
 
     public static void hide() {
         instance.setVisible(false);

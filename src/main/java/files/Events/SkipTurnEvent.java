@@ -15,16 +15,12 @@ public class SkipTurnEvent extends WayElementEvent {
 
     public SkipTurnEvent(WayElement element) {
         super(TYPE, element);
-
         this.player = PlayerController.getInstance().getCurrentPlayer();
-
-        player.passMation();
-        System.out.println(player.toString() + "пропускает ход");
-        SkipTurnPane.show(player);
     }
 
     public Player getPlayer() {
         return player;
     }
 }
+
 

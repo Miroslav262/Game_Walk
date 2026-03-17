@@ -6,6 +6,7 @@ import files.Events.PassMotion;
 import files.GameDrawer;
 import files.Player;
 import files.PlayerController;
+import files.WhoNowTurnLabel;
 import javafx.scene.layout.Pane;
 
 public class Way {
@@ -42,39 +43,22 @@ public class Way {
 
 
 
-    public void doStep(int steps){
+    public void doStep(int steps) {
         Player player = PlayerController.getInstance().getCurrentPlayer();
 
-        if(player.isPassMotion()){
-            player.continueMotion();
-            gameRoot.fireEvent(new PassMotion(PassMotion.TYPE, player));
+        int newPos = player.getPosition() + steps;
+        if (newPos >= elements.size()) {
+            player.setPosition(elements.size() - 1);
+        } else {
+            player.setPosition(newPos);
         }
-        else{
-            if(player.getPosition()+steps >= elements.size()){
-                PlayerController.getInstance().getCurrentPlayer().setPosition(elements.size()-1);
-            }
-            else{
-                PlayerController.getInstance().getCurrentPlayer().setPosition(player.getPosition()+steps);
-            }
+        GameDrawer.getInstance().draw();
 
-            gameRoot.fireEvent(elements.get(PlayerController.getInstance().getCurrentPlayer().getPosition()).getEvent());
-        }
-        Player next = PlayerController.getInstance().getNext();
+        gameRoot.fireEvent(elements.get(player.getPosition()).getEvent());
 
-        System.out.println("Ходил: " + player);
-        System.out.println("Следующим ходит: " + next);
+        PlayerController.getInstance().toNext();
+        PlayerController.getInstance().updateState();
+        WhoNowTurnLabel.updateLabel();
         GameDrawer.getInstance().draw();
     }
-
-    public void doBackSteps(int steps){
-        Player player = PlayerController.getInstance().getCurrentPlayer();
-        if(player.getPosition()-steps < 0 ){
-            PlayerController.getInstance().getCurrentPlayer().setPosition(0);
-        }
-        else{
-            PlayerController.getInstance().getCurrentPlayer().setPosition(player.getPosition()-steps);
-        }
-    }
-
-
 }
