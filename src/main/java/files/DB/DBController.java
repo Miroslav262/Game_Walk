@@ -102,6 +102,48 @@ public class DBController {
             throw new RuntimeException(e);
         }
     }
+
+    public void delQuestion(Question question) {
+        try {
+            connection.setAutoCommit(false);
+
+            String findSql = "SELECT idQ FROM Question WHERE text = ? AND complexity = ?";
+            PreparedStatement findStmt = connection.prepareStatement(findSql);
+            findStmt.setString(1, question.getQuestionText());
+            findStmt.setInt(2, question.getComplexity());
+
+            ResultSet rs = findStmt.executeQuery();
+
+            if (!rs.next()) {
+                throw new SQLException("Вопрос не найден в базе данных");
+            }
+
+            int idQ = rs.getInt("idQ");
+
+            String deleteOptions = "DELETE FROM Option WHERE idQ = ?";
+            PreparedStatement stmtO = connection.prepareStatement(deleteOptions);
+            stmtO.setInt(1, idQ);
+            stmtO.executeUpdate();
+
+            String deleteQuestion = "DELETE FROM Question WHERE idQ = ?";
+            PreparedStatement stmtQ = connection.prepareStatement(deleteQuestion);
+            stmtQ.setInt(1, idQ);
+            stmtQ.executeUpdate();
+
+            connection.commit();
+            connection.setAutoCommit(true);
+
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException("Ошибка при откате транзакции", ex);
+            }
+            throw new RuntimeException("Ошибка при удалении вопроса: " + e.getMessage(), e);
+        }
+    }
+
+
     public List<Question> getAllQuestions() {
         List<Question> questions = new ArrayList<>();
 

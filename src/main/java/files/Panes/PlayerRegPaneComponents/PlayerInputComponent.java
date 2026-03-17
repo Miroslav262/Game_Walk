@@ -30,6 +30,7 @@ public class PlayerInputComponent extends HBox {
         this.getChildren().add(textField);
 
         colorPicker = new ColorPicker();
+        colorPicker.setValue(Color.color(Math.random(), Math.random(), Math.random()));
         this.getChildren().add(colorPicker);
 
         Button delButton = new Button();

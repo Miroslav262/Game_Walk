@@ -16,7 +16,6 @@ import java.util.List;
 
 public class InputDBForm extends Pane {
 
-    private DBController dbController;
     private String textQuestion;
     private TextArea inputQuestion;
     private ComboBox<String> comboBox;
@@ -24,7 +23,7 @@ public class InputDBForm extends Pane {
     private int complexity;
 
     public InputDBForm(DBController dbController) {
-        this.dbController = dbController;
+
 
         textQuestion = null;
         complexity = -1;
@@ -80,7 +79,6 @@ public class InputDBForm extends Pane {
 
         main.getChildren().add(inputQBar);
 
-        // Добавляем 3 варианта по умолчанию
         for (int i = 0; i < 3; i++) {
             main.getChildren().add(new QuestionOptionPane());
         }
@@ -152,7 +150,7 @@ public class InputDBForm extends Pane {
                     if (correctID != -1) {
                         throw new RuntimeException("Только 1 вариант ответа должен быть правильным!");
                     }
-                    correctID = optionIndex;
+                    correctID = optionIndex+1;
                 }
 
                 optionIndex++;

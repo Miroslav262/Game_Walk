@@ -5,6 +5,8 @@ import files.Panes.*;
 import files.Panes.EventPanes.*;
 import files.WayElements.Way;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class GameInitializer extends StackPane {
     private static GameInitializer instance = new GameInitializer();
@@ -82,7 +84,5 @@ public class GameInitializer extends StackPane {
 
         this.getChildren().add(DBWorker.getInstance());
         this.getChildren().add(BlockerPane.getInstance());
-
-
     }
 }
