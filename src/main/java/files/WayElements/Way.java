@@ -1,5 +1,6 @@
 package files.WayElements;
 
+import java.io.InputStream;
 import java.util.List;
 
 import files.Events.PassMotion;
@@ -23,19 +24,26 @@ public class Way {
     private List<WayElement> elements;
     private Pane gameRoot;
     private Way(Pane gameRoot){
-        try{
-            elements = WayGenerator.genWay("src/main/java/files/config.yaml");
-            for(WayElement w: elements){
+        try {
+            InputStream is = getClass().getResourceAsStream("/config.yaml");
+            if (is == null) {
+                throw new RuntimeException("config.yaml not found in resources");
+            }
+
+            elements = WayGenerator.genWay(is);
+
+            for (WayElement w : elements) {
                 System.out.println(w);
             }
 
             this.gameRoot = gameRoot;
-            }
-        catch (Throwable throwable){
+
+        } catch (Throwable throwable) {
             System.out.println(throwable);
             throw new RuntimeException("Ошибка инициализации пути");
         }
     }
+
 
     public List<WayElement> getElements(){
         return this.elements;

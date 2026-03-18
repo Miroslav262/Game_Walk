@@ -1,6 +1,10 @@
 package files.DB;
 
 import files.Question;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,70 +12,89 @@ import java.util.List;
 public class DBController {
     private Connection connection;
 
-    private static DBController instance = new DBController("jdbc:sqlite:src/main/java/files/DB/app.db");
+    private static DBController instance = new DBController();
 
-    public static DBController getInstance(){
+    public static DBController getInstance() {
         return instance;
     }
 
-
-    private DBController(String url){
-        try{
+    // Старый конструктор оставляем, но не используем
+    private DBController(String url) {
+        try {
             connection = DriverManager.getConnection(url);
-
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // Новый рабочий конструктор
+    private DBController() {
+        try {
+            Path dbPath = extractDatabase();
+            String url = "jdbc:sqlite:" + dbPath.toAbsolutePath();
+
+            connection = DriverManager.getConnection(url);
+
+            checkOrCreateTables();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Path extractDatabase() throws IOException {
+        InputStream is = getClass().getResourceAsStream("/app.db");
+        if (is == null) {
+            throw new IOException("app.db not found in resources");
+        }
+
+        Path temp = Files.createTempFile("app", ".db");
+        temp.toFile().deleteOnExit();
+
+        Files.copy(is, temp, StandardCopyOption.REPLACE_EXISTING);
+
+        return temp;
+    }
+
+    private void checkOrCreateTables() throws SQLException {
         String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'";
 
         try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             if (!rs.next()) {
-                System.out.println("База пустая: нет таблиц");
+                System.out.println("База пустая: создаю таблицы");
                 createDB();
-
             } else {
                 System.out.println("В базе есть таблицы");
             }
         }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
-    private void createDB(){
-        try{
-            String createQuestion =
-                    "CREATE TABLE IF NOT EXISTS Question (" +
-                            "idQ INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                            "text TEXT NOT NULL, " +
-                            "complexity INTEGER NOT NULL" +
-                            ");";
+    private void createDB() throws SQLException {
+        String createQuestion =
+                "CREATE TABLE IF NOT EXISTS Question (" +
+                        "idQ INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "text TEXT NOT NULL, " +
+                        "complexity INTEGER NOT NULL" +
+                        ");";
 
-            connection.prepareStatement(createQuestion).executeUpdate();
+        connection.prepareStatement(createQuestion).executeUpdate();
 
-            String createOption =
-                    "CREATE TABLE IF NOT EXISTS Option (" +
-                            "idO INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                            "idQ INTEGER NOT NULL, " +
-                            "text TEXT NOT NULL, " +
-                            "isCorrect BOOLEAN NOT NULL DEFAULT 0, " +
-                            "FOREIGN KEY (idQ) REFERENCES Question(idQ)" +
-                            ");";
+        String createOption =
+                "CREATE TABLE IF NOT EXISTS Option (" +
+                        "idO INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "idQ INTEGER NOT NULL, " +
+                        "text TEXT NOT NULL, " +
+                        "isCorrect BOOLEAN NOT NULL DEFAULT 0, " +
+                        "FOREIGN KEY (idQ) REFERENCES Question(idQ)" +
+                        ");";
 
-            connection.prepareStatement(createOption).executeUpdate();
-        }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        connection.prepareStatement(createOption).executeUpdate();
     }
-
 
     public void addQuestion(Question question) {
         try {
-
             String insertQuestion = "INSERT INTO Question(text, complexity) VALUES (?, ?)";
             PreparedStatement stmtQ = connection.prepareStatement(insertQuestion, Statement.RETURN_GENERATED_KEYS);
             stmtQ.setString(1, question.getQuestionText());
@@ -97,8 +120,7 @@ public class DBController {
                 stmtO.executeUpdate();
             }
 
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -143,7 +165,6 @@ public class DBController {
         }
     }
 
-
     public List<Question> getAllQuestions() {
         List<Question> questions = new ArrayList<>();
 
@@ -182,15 +203,15 @@ public class DBController {
                 Question q = new Question(questionText, answers, correctIndex, complexity);
                 questions.add(q);
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             return null;
         }
 
         return questions;
     }
-    public Question getByID(int idQ){
-        try{
+
+    public Question getByID(int idQ) {
+        try {
             Question result;
 
             String sqlQ = "SELECT text, complexity FROM Question WHERE idQ = ?";
@@ -201,7 +222,7 @@ public class DBController {
             String questionText = resultSetQ.getString("text");
             int complexity = resultSetQ.getInt("complexity");
 
-            if(questionText == null) throw new SQLException();
+            if (questionText == null) throw new SQLException();
 
             String sqlO = "SELECT text, isCorrect FROM Option WHERE idQ = ?";
             PreparedStatement preparedStatementO = connection.prepareStatement(sqlO);
@@ -212,24 +233,24 @@ public class DBController {
             int correctIndex = -1;
             int index = 0;
 
-            while(resultSetO.next()){
+            while (resultSetO.next()) {
                 String answerText = resultSetO.getString("text");
                 boolean isCorrect = resultSetO.getBoolean("isCorrect");
 
                 answers.add(answerText);
 
-                if(isCorrect){
+                if (isCorrect) {
                     correctIndex = index;
                 }
                 index++;
             }
             result = new Question(questionText, answers, correctIndex, complexity);
             return result;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             return null;
         }
     }
+
     public void clearDB() {
         try {
             String sqlDropOption = "DROP TABLE IF EXISTS Option";
@@ -242,5 +263,4 @@ public class DBController {
             throw new RuntimeException(e);
         }
     }
-
 }
