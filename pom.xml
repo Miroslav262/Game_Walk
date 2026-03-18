@@ -4,20 +4,27 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <!-- To run press "Alt + /(Numpud)"  -->
+
     <groupId>org.apache.maven</groupId>
     <artifactId>Game_walk</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>Game_walk</name>
 
-    <!-- Указываем Maven, что проект должен собираться Java 24 -->
     <properties>
-        <maven.compiler.source>24</maven.compiler.source>
-        <maven.compiler.target>24</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+
         <!-- SQLite JDBC -->
         <dependency>
             <groupId>org.xerial</groupId>
@@ -25,86 +32,76 @@
             <version>3.45.1.0</version>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/org.openjfx/javafx-base -->
+        <!-- JavaFX (Windows native) -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
-            <version>25.0.2</version>
-            <scope>compile</scope>
+            <version>21.0.2</version>
+            <classifier>win</classifier>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>25.0.2</version>
-            <scope>compile</scope>
+            <version>21.0.2</version>
+            <classifier>win</classifier>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>25.0.2</version>
-            <scope>compile</scope>
+            <version>21.0.2</version>
+            <classifier>win</classifier>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/org.openjfx/javafx-graphics -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
-            <version>25.0.2</version>
-            <scope>compile</scope>
+            <version>21.0.2</version>
+            <classifier>win</classifier>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/org.openjfx/javafx-media -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
-            <version>25.0.2</version>
-            <scope>compile</scope>
+            <version>21.0.2</version>
+            <classifier>win</classifier>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
-            <version>25.0.2</version>
-            <scope>compile</scope>
+            <version>21.0.2</version>
+            <classifier>win</classifier>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/org.openjfx/javafx-web -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
-            <version>25.0.2</version>
-            <scope>compile</scope>
+            <version>21.0.2</version>
+            <classifier>win</classifier>
         </dependency>
 
+        <!-- YAML -->
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
             <version>2.17.1</version>
         </dependency>
 
-
+        <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.12</version>
         </dependency>
 
-
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-
         <plugins>
+
+            <!-- JavaFX plugin (для mvn javafx:run) -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -113,8 +110,37 @@
                     <mainClass>files.Main</mainClass>
                 </configuration>
             </plugin>
+
+            <!-- Shade plugin (fat-jar) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>files.Main</mainClass>
+                                </transformer>
+                            </transformers>
+
+                            <!-- Чтобы shaded-jar имел своё имя -->
+                            <finalName>Game_walk_shaded</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
-
 
 </project>
