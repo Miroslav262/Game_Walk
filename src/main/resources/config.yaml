@@ -1,6 +1,6 @@
 mapSize:
-  min: 20
-  max: 25
+  min: 25
+  max: 30
 
 wayProbabilities:
   QuestionElement: 0.75
