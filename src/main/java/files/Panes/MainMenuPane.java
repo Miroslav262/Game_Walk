@@ -8,9 +8,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 
 public class MainMenuPane extends StackPane {
@@ -28,8 +31,18 @@ public class MainMenuPane extends StackPane {
         );
 
 
+        Image img = new Image(getClass().getResource("/images/MainMenuImg.png").toExternalForm());
+
+        BackgroundImage bg = new BackgroundImage(
+                img,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true)
+        );
+
         this.setBackground(new Background(
-                new BackgroundFill(Color.web("#008A00"), new CornerRadii(0), Insets.EMPTY)
+                bg
         ));
 
         VBox vBox = new VBox();
@@ -37,9 +50,11 @@ public class MainMenuPane extends StackPane {
         vBox.setSpacing(20);
         this.getChildren().add(vBox);
 
-        Label label = new Label("Главное меню");
-        label.setFont(Font.font("Comic Sans MS", 35));
+        Label label = new Label("Энергоквест");
+        label.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 40));
+        label.setTextFill(Color.BLACK);
         vBox.getChildren().add(label);
+
 
         StyledButton newGameBut = new StyledButton("Новая игра", 30, new EventHandler<ActionEvent>() {
             @Override

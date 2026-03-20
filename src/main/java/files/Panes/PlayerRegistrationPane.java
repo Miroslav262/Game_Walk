@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -28,9 +29,21 @@ public class PlayerRegistrationPane extends StackPane {
     }
 
     private PlayerRegistrationPane() {
+
+        Image img = new Image(getClass().getResource("/images/PlayerRegMenuImg.png").toExternalForm());
+
+        BackgroundImage bg = new BackgroundImage(
+                img,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true)
+        );
+
         this.setBackground(new Background(
-                new BackgroundFill(Color.web("#008A00"), new CornerRadii(0), Insets.EMPTY)
+                bg
         ));
+
         this.setAlignment(Pos.CENTER);
 
         VBox vBox = new VBox();
