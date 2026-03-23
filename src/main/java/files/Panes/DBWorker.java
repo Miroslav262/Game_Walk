@@ -2,8 +2,6 @@ package files.Panes;
 
 
 import files.DB.DBController;
-import files.Main;
-import files.Player;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;

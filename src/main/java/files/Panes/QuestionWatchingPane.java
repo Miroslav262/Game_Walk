@@ -1,7 +1,7 @@
 package files.Panes;
 
 import files.DB.DBController;
-import files.Main;
+import files.App;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -26,8 +26,8 @@ public class QuestionWatchingPane extends Pane {
 
         TextArea qText = new TextArea(question.getQuestionText());
         qText.setEditable(false);
-        qText.setPrefWidth(Main.getPrimaryStage().getWidth()*0.2);
-        qText.setPrefHeight(Main.getPrimaryStage().getHeight()*0.2);
+        qText.setPrefWidth(App.getPrimaryStage().getWidth()*0.2);
+        qText.setPrefHeight(App.getPrimaryStage().getHeight()*0.2);
         qText.setWrapText(true);
 
         VBox qTextAndHardness = new VBox();

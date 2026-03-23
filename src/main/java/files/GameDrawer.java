@@ -46,8 +46,8 @@ public class GameDrawer extends Canvas{
 
         miniPoints = beziersCurve.getPoints(150);
         this.draw();
-        this.getGraphicsContext2D().getCanvas().widthProperty().bind(Main.getPrimaryStage().heightProperty());
-        this.getGraphicsContext2D().getCanvas().heightProperty().bind(Main.getPrimaryStage().heightProperty());
+        this.getGraphicsContext2D().getCanvas().widthProperty().bind(App.getPrimaryStage().heightProperty());
+        this.getGraphicsContext2D().getCanvas().heightProperty().bind(App.getPrimaryStage().heightProperty());
     }
 
     public void draw(){

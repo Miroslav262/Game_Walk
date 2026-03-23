@@ -1,11 +1,10 @@
 package files.Animations;
 
 import files.Dice;
-import files.Main;
+import files.App;
 import files.Panes.BlockerPane;
 import files.WayElements.Way;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -22,8 +21,8 @@ public static RollDiceAnimationPane getInstance(){
     private RollDiceAnimationPane() {
         mediaView = new MediaView();
         mediaView.setPreserveRatio(true);
-        mediaView.fitWidthProperty().bind(Main.getPrimaryStage().widthProperty().multiply(0.3));
-        mediaView.fitHeightProperty().bind(Main.getPrimaryStage().heightProperty().multiply(0.3));
+        mediaView.fitWidthProperty().bind(App.getPrimaryStage().widthProperty().multiply(0.3));
+        mediaView.fitHeightProperty().bind(App.getPrimaryStage().heightProperty().multiply(0.3));
 
 
         getChildren().add(mediaView);

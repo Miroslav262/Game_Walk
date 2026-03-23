@@ -1,15 +1,12 @@
 package files.Panes;
 
-import files.GameInitializer;
-import files.Main;
-import files.Utils;
+import files.App;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 
 public class BlockerPane extends Pane {
     private static final BlockerPane instance = new BlockerPane();
@@ -19,8 +16,8 @@ public class BlockerPane extends Pane {
         this.setBackground(new Background(new BackgroundFill(Color.rgb(0,0,0, 0.25), new CornerRadii(0), new Insets(0))));
 
         //this.setManaged(false);
-        this.prefWidthProperty().bind(Main.getPrimaryStage().widthProperty());
-        this.prefHeightProperty().bind(Main.getPrimaryStage().heightProperty());
+        this.prefWidthProperty().bind(App.getPrimaryStage().widthProperty());
+        this.prefHeightProperty().bind(App.getPrimaryStage().heightProperty());
 
         this.setVisible(isVisible);
         this.setPickOnBounds(isVisible);

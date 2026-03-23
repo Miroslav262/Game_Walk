@@ -18,7 +18,8 @@ public class DBController {
         return instance;
     }
 
-    // Старый конструктор оставляем, но не используем
+    private static final int LATEST_SCHEMA_VERSION = 1;
+
     private DBController(String url) {
         try {
             connection = DriverManager.getConnection(url);
@@ -27,46 +28,75 @@ public class DBController {
         }
     }
 
-    // Новый рабочий конструктор
     private DBController() {
         try {
-            Path dbPath = extractDatabase();
-            String url = "jdbc:sqlite:" + dbPath.toAbsolutePath();
 
+            Path dbPath = Paths.get(System.getProperty("user.home"), "sea_battle", "app.db");
+            if (Files.notExists(dbPath)) {
+                Files.createDirectories(dbPath.getParent());
+                try (InputStream is = getClass().getResourceAsStream("/app.db")) {
+                    if (is == null) throw new IOException("app.db not found in resources");
+                    Files.copy(is, dbPath);
+                }
+            }
+
+            String url = "jdbc:sqlite:" + dbPath.toAbsolutePath();
             connection = DriverManager.getConnection(url);
 
-            checkOrCreateTables();
+            applyMigrations();
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Path extractDatabase() throws IOException {
-        InputStream is = getClass().getResourceAsStream("/app.db");
-        if (is == null) {
-            throw new IOException("app.db not found in resources");
+
+    private void applyMigrations() throws SQLException {
+        // Создаем таблицу версий, если её нет
+        String createVersionTable =
+                "CREATE TABLE IF NOT EXISTS SchemaVersion (" +
+                        "version INTEGER NOT NULL" +
+                        ");";
+        connection.prepareStatement(createVersionTable).executeUpdate();
+
+        int currentVersion = getCurrentDBVersion();
+
+        connection.setAutoCommit(false);
+        try {
+            if (currentVersion < 1) {
+                createDB();
+                updateSchemaVersion(1);
+            }
+
+            connection.commit();
+        } catch (SQLException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            connection.setAutoCommit(true);
         }
-
-        Path temp = Files.createTempFile("app", ".db");
-        temp.toFile().deleteOnExit();
-
-        Files.copy(is, temp, StandardCopyOption.REPLACE_EXISTING);
-
-        return temp;
     }
 
-    private void checkOrCreateTables() throws SQLException {
-        String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            if (!rs.next()) {
-                System.out.println("База пустая: создаю таблицы");
-                createDB();
+    private int getCurrentDBVersion() throws SQLException {
+        String sql = "SELECT version FROM SchemaVersion";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("version");
             } else {
-                System.out.println("В базе есть таблицы");
+                return 0;
+            }
+        }
+    }
+
+    private void updateSchemaVersion(int newVersion) throws SQLException {
+        String checkSql = "SELECT COUNT(*) FROM SchemaVersion";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(checkSql)) {
+            if (rs.next() && rs.getInt(1) > 0) {
+                stmt.executeUpdate("UPDATE SchemaVersion SET version = " + newVersion);
+            } else {
+                stmt.executeUpdate("INSERT INTO SchemaVersion(version) VALUES (" + newVersion + ")");
             }
         }
     }
@@ -78,7 +108,6 @@ public class DBController {
                         "text TEXT NOT NULL, " +
                         "complexity INTEGER NOT NULL" +
                         ");";
-
         connection.prepareStatement(createQuestion).executeUpdate();
 
         String createOption =
@@ -89,7 +118,6 @@ public class DBController {
                         "isCorrect BOOLEAN NOT NULL DEFAULT 0, " +
                         "FOREIGN KEY (idQ) REFERENCES Question(idQ)" +
                         ");";
-
         connection.prepareStatement(createOption).executeUpdate();
     }
 
@@ -102,9 +130,7 @@ public class DBController {
             stmtQ.executeUpdate();
 
             ResultSet rs = stmtQ.getGeneratedKeys();
-            if (!rs.next()) {
-                throw new SQLException("Не удалось получить id вопроса");
-            }
+            if (!rs.next()) throw new SQLException("Не удалось получить id вопроса");
             int idQ = rs.getInt(1);
 
             String insertOption = "INSERT INTO Option(idQ, text, isCorrect) VALUES (?, ?, ?)";
@@ -136,9 +162,7 @@ public class DBController {
 
             ResultSet rs = findStmt.executeQuery();
 
-            if (!rs.next()) {
-                throw new SQLException("Вопрос не найден в базе данных");
-            }
+            if (!rs.next()) throw new SQLException("Вопрос не найден в базе данных");
 
             int idQ = rs.getInt("idQ");
 
@@ -156,18 +180,13 @@ public class DBController {
             connection.setAutoCommit(true);
 
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new RuntimeException("Ошибка при откате транзакции", ex);
-            }
+            try { connection.rollback(); } catch (SQLException ex) { throw new RuntimeException(ex); }
             throw new RuntimeException("Ошибка при удалении вопроса: " + e.getMessage(), e);
         }
     }
 
     public List<Question> getAllQuestions() {
         List<Question> questions = new ArrayList<>();
-
         try {
             String sqlQ = "SELECT idQ, text, complexity FROM Question";
             PreparedStatement stmtQ = connection.prepareStatement(sqlQ);
@@ -192,11 +211,7 @@ public class DBController {
                     boolean isCorrect = rsO.getBoolean("isCorrect");
 
                     answers.add(answerText);
-
-                    if (isCorrect) {
-                        correctIndex = index;
-                    }
-
+                    if (isCorrect) correctIndex = index;
                     index++;
                 }
 
@@ -206,23 +221,20 @@ public class DBController {
         } catch (SQLException e) {
             return null;
         }
-
         return questions;
     }
 
     public Question getByID(int idQ) {
         try {
-            Question result;
-
             String sqlQ = "SELECT text, complexity FROM Question WHERE idQ = ?";
             PreparedStatement preparedStatementQ = connection.prepareStatement(sqlQ);
             preparedStatementQ.setInt(1, idQ);
             ResultSet resultSetQ = preparedStatementQ.executeQuery();
 
+            if (!resultSetQ.next()) return null;
+
             String questionText = resultSetQ.getString("text");
             int complexity = resultSetQ.getInt("complexity");
-
-            if (questionText == null) throw new SQLException();
 
             String sqlO = "SELECT text, isCorrect FROM Option WHERE idQ = ?";
             PreparedStatement preparedStatementO = connection.prepareStatement(sqlO);
@@ -238,14 +250,11 @@ public class DBController {
                 boolean isCorrect = resultSetO.getBoolean("isCorrect");
 
                 answers.add(answerText);
-
-                if (isCorrect) {
-                    correctIndex = index;
-                }
+                if (isCorrect) correctIndex = index;
                 index++;
             }
-            result = new Question(questionText, answers, correctIndex, complexity);
-            return result;
+
+            return new Question(questionText, answers, correctIndex, complexity);
         } catch (SQLException e) {
             return null;
         }
@@ -258,7 +267,6 @@ public class DBController {
 
             String sqlDropQuestion = "DROP TABLE IF EXISTS Question";
             connection.prepareStatement(sqlDropQuestion).executeUpdate();
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
