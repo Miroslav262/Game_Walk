@@ -2,6 +2,7 @@ package files.DB;
 
 import files.Question;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
@@ -31,7 +32,15 @@ public class DBController {
     private DBController() {
         try {
 
-            Path dbPath = Paths.get(System.getProperty("user.home"), "sea_battle", "app.db");
+            Path jarDir = Paths.get(new File(DBController.class
+                    .getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation()
+                    .toURI())
+                    .getParent());
+
+            Path dbPath = jarDir.resolve("app.db");
+
             if (Files.notExists(dbPath)) {
                 Files.createDirectories(dbPath.getParent());
                 try (InputStream is = getClass().getResourceAsStream("/app.db")) {
@@ -142,7 +151,7 @@ public class DBController {
             for (int i = 0; i < answers.size(); i++) {
                 stmtO.setInt(1, idQ);
                 stmtO.setString(2, answers.get(i));
-                stmtO.setBoolean(3, i == correctIndex);
+                stmtO.setBoolean(3, i+1 == correctIndex);
                 stmtO.executeUpdate();
             }
 

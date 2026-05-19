@@ -62,6 +62,7 @@ public class QuestionWatchingPane extends Pane {
 
         VBox answers = new VBox();
 
+        System.out.println("DEBUG: qCurrectID = " + (question.getCorrectID() ));
         for(int i = 0; i< question.getAnswers().size(); i++){
             HBox answer = new HBox();
             answer.setBackground(new Background(new BackgroundFill(Color.DARKGREEN,  new CornerRadii(5), new Insets(0))));
@@ -70,9 +71,10 @@ public class QuestionWatchingPane extends Pane {
             rb.setMouseTransparent(true);
             rb.setFocusTraversable(false);
 
-            if(question.getCorrectID() - 1 == i){
+            if(question.getCorrectID() == i){
                 rb.setSelected(true);
             }
+
             else{
                 rb.setSelected(false);
             }

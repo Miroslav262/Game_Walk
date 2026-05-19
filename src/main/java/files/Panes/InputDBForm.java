@@ -97,6 +97,7 @@ public class InputDBForm extends Pane {
         submitBtn.setOnAction(e -> {
             try {
                 Question q = getQuestion();
+                System.out.println("[DEBUG]"+q);
                 dbController.addQuestion(q);
                 new Alert(Alert.AlertType.INFORMATION, "Данные успешно добавлены").showAndWait();
             } catch (Exception ex) {
