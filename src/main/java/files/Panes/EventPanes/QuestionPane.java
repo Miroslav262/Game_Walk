@@ -71,12 +71,12 @@ public class QuestionPane extends StackPane {
 
                 for (int i = 0; i < questionView.getOptionRBList().size(); i++) {
                     questionView.getOptionRBList().get(i)
-                            .setNewState(question.getCorrectID() == i + 1);
+                            .setNewState(question.getCorrectID() == i);
                 }
 
 
                 boolean correct = selected ==
-                        questionView.getOptionRBList().get(question.getCorrectID() - 1).getRadioButton();
+                        questionView.getOptionRBList().get(question.getCorrectID()).getRadioButton();
 
                 if (correct) {
                     label.setText("Игрок " + questionPlayer.getName() + " отвечает правильно");
@@ -92,7 +92,7 @@ public class QuestionPane extends StackPane {
                 boolean correct =
                         questionView.getToggleGroup().getSelectedToggle() ==
                                 questionView.getOptionRBList()
-                                        .get(question.getCorrectID() - 1)
+                                        .get(question.getCorrectID())
                                         .getRadioButton();
 
                 if (!correct) {
