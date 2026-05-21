@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.util.List;
+
 public class App extends Application {
 
     public static void main(String[] args) {
@@ -31,7 +33,9 @@ public class App extends Application {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
 
-        System.out.println(DBController.getInstance().getAllQuestions());
+        List<Question> arr = DBController.getInstance().getAllQuestions();
 
+        Question.writeQuestionsToTxt(arr, "list.txt");
+        System.out.println(Question.questionsToJson(arr));
     }
 }
