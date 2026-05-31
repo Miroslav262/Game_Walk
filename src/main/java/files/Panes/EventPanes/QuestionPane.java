@@ -110,7 +110,6 @@ public class QuestionPane extends StackPane {
             }
         });
 
-        // картинка
         var image = new javafx.scene.image.Image("/images/Question.png");
         var imageView = new javafx.scene.image.ImageView(image);
         imageView.setPreserveRatio(true);
@@ -118,7 +117,7 @@ public class QuestionPane extends StackPane {
 
 
 
-        modalPane.getChildren().addAll(label, imageView /* questionView будет позже */, button);
+        modalPane.getChildren().addAll(label, imageView, button);
         this.getChildren().add(modalPane);
         this.setVisible(false);
     }
